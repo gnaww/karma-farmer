@@ -30,3 +30,6 @@ socketio.init_app(app)
 @app.errorhandler(404)
 def not_found(error):
   return render_template("404.html"), 404
+
+# Populate DB
+from app.db import populate_db
