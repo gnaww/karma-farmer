@@ -12,7 +12,7 @@ def fetch_data(subreddit):
     # Get top 50 results
     # Get posts after Wednesday, January 1, 2020 12:00:00 AM GMT
     res = requests.get(
-        """https://api.pushshift.io/reddit/search/submission/?subreddit=%s&sort_type=score&sort=desc&size=20&after=1577836800&fields=score,selftext,title"""
+        """https://api.pushshift.io/reddit/search/submission/?subreddit=%s&sort_type=score&sort=desc&size=50&after=1577836800&fields=score,selftext,title"""
         % (subreddit)
     )
     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
