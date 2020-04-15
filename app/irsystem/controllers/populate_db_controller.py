@@ -1,6 +1,6 @@
 from . import *
 from app.irsystem.models.helpers import *
-from app.db import populate_db
+from app.db import populate_db, Data
 
 
 @irsystem.route("/populateDB", methods=["GET"])

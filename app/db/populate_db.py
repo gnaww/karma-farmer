@@ -1,5 +1,5 @@
 from nltk.tokenize import TweetTokenizer
-from . import db, Word, SUBREDDITS_LIST
+from . import db, Data, SUBREDDITS_LIST
 import numpy as np
 import requests
 import json
@@ -50,14 +50,17 @@ def process_data(data_arr):
     return (word_to_index, processed_data)
 
 
-def generate_db_objects(subreddit, word_to_index, processed_matrix):
-    db_objects = []
+def generate_strings(word_to_index, processed_matrix):
+    str_arr = []
     for word in word_to_index:
         ind = word_to_index[word]
         frequency = int(processed_matrix[ind][0])
         netScore = int(processed_matrix[ind][1])
-        db_objects.append(Word(frequency, netScore, subreddit, word))
-    return db_objects
+        obj = json.dumps(
+            {"word": word, "frequency": frequency, "netScore": netScore}
+        )  # dictionary to str
+        str_arr.append(obj)
+    return str_arr
 
 
 def populate_db():
@@ -69,8 +72,8 @@ def populate_db():
     for subreddit in SUBREDDITS_LIST:
         fetched_data = fetch_data(subreddit)
         word_to_index, processed_data = process_data(fetched_data)
-        db_objects = generate_db_objects(subreddit, word_to_index, processed_data)
-        db.session.bulk_save_objects(db_objects)
+        str_arr = generate_strings(word_to_index, processed_data)
+        db.session.add(Data(subreddit, str_arr))
 
     # Persist changes to db
     db.session.commit()
