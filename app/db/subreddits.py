@@ -29,7 +29,7 @@ SUBREDDITS_LIST = [
     "nostupidquestions",
     "outoftheloop",
     "askhistorians",
-    "Science",
+    "science",
     "jokes",
     "television",
     "programming",
