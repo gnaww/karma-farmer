@@ -3,6 +3,7 @@ from . import db, Data, SUBREDDITS_LIST
 import numpy as np
 import requests
 import json
+import time
 
 tweet_tokenizer = TweetTokenizer()
 
@@ -16,6 +17,7 @@ def fetch_data(subreddit):
         % (subreddit)
     )
     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
+    time.sleep(0.5)
     return res.json()["data"]
 
 
