@@ -14,6 +14,8 @@ def search():
 		output_message = ''
 	else:
 		output_message = "Suggested Subreddits for: " + query
-		data = get_results(query)
+		data = []
+		for i in get_results(query):
+			data.append(i['subreddit'])
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 

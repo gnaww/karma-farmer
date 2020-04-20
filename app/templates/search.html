@@ -3,36 +3,47 @@
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/main.css">
+    <script src="https://kit.fontawesome.com/8ea94d6b77.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div class="topcorner">
-        <p>Project Name: {{ name }}</p>
-        <p>Student Name: ({{ netid }})</p>
+        <p style="font-family: Verdana;">Project Name: {{ name }}</p>
+        <p style="font-family: Verdana;">Student Name: ({{ netid }})</p>
     </div>
+    <strong>
+        <div style="text-align:left; padding-left: 50px; position: absolute; top:2%; font-size: 30px; color: rgb(255, 86, 0, 1); 
+        font-family: Verdana;">
+            <p>Karma-Farmer <i class="fas fa-tractor"></i></p>
+        </div>
+    </strong>
     <form class="form-inline global-search">
-        <h1 style="font-size: 30px; font-family:Verdana; color: rgb(39, 39, 39)">
-            Where Should I Post
+        <h1 style="font-size: 55px; font-weight: bold; font-family:Helvetica; color:#282828">
+            Where Should I Post This?
         </h1>
         <br><br>
         <div class="form-group">
             <input id="input" type="text" name="search" class="form-control" placeholder="My Post">
         </div>
         <br><br>
-        <h1 style="font-size: 30px; font-family:Verdana; color: rgb(39, 39, 39)">
+        <!--<h1 style="font-size: 50px; font-family:Arial; color: rgb(39, 39, 39)">
             To Gain The Most Karma?
-        </h1>
+        </h1>-->
 
         <br><br>
 
-        <button type="submit" class="btn btn-info"> Tell Me! </button>
+        <button type="submit" class="btn btn-info" style="background-color: rgb(255, 86, 0, 1); color:white;"> Tell Me!
+        </button>
     </form>
     <form class="form-inline global-search">
         {% if data %}
-        <h1 style="font-size: 30px; font-family:Verdana; color: black">{{output_message}}</h1>
+        <h1 style="font-size: 30px; font-family:Arial; color: black">{{output_message}}</h1>
         {% for d in data %}
+        {% for i in data %}
         <br><br>
-        <p>{{d}}</p>
+        <p style="font-size: 15px; font-family:Arial; color: black">subreddit: {{i}}</p>
+        <br>
+        {% endfor %}
         {% endfor %}
         {% endif %}
     </form>

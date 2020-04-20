@@ -29,6 +29,10 @@ position:absolute;
 top:2%;
 right:2%;
 }
+.topleftcorner{
+text-align: right;
+padding:50px
+}
 .btn{
 background-color: #4285F4;
 border: none
