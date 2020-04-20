@@ -40,7 +40,6 @@ SUBREDDITS_LIST = [
     "hiphopheads",
     "apple",
     "tooafraidtoask",
-    "iama",
     "lifeprotips",
     "nottheonion",
     "space",
