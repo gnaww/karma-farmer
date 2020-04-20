@@ -11,11 +11,14 @@ def search():
 	query = request.args.get('search')
 	if not query:
 		data = []
+		count = 0
 		output_message = ''
 	else:
 		output_message = "Suggested Subreddits for: " + query
 		data = []
+		count = 0; 
 		for i in get_results(query):
+			#data.append("subreddit: " + i['subreddit'] + ",   " + "score: " + str(i['score']))
 			data.append(i['subreddit'])
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 

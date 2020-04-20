@@ -6,7 +6,7 @@
     <script src="https://kit.fontawesome.com/8ea94d6b77.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body style="background-color:rgb(255, 255, 255)">
     <div class="topcorner">
         <p style="font-family: Verdana;">Project Name: {{ name }}</p>
         <p style="font-family: Verdana;">Student Name: ({{ netid }})</p>
@@ -23,27 +23,27 @@
         </h1>
         <br><br>
         <div class="form-group">
-            <input id="input" type="text" name="search" class="form-control" placeholder="My Post">
+            <textarea style="background-color: #ffffff;" rows="10" cols="10" id="input" type="text" name="search"
+                class="form-control" placeholder="My Post"></textarea>
         </div>
         <br><br>
         <!--<h1 style="font-size: 50px; font-family:Arial; color: rgb(39, 39, 39)">
-            To Gain The Most Karma?
+            To Gain The Most Karma? style="height: 250px; width: 500px; text-align: center; word-break: break-word;"
         </h1>-->
-
-        <br><br>
 
         <button type="submit" class="btn btn-info" style="background-color: rgb(255, 86, 0, 1); color:white;"> Tell Me!
         </button>
     </form>
     <form class="form-inline global-search">
         {% if data %}
-        <h1 style="font-size: 30px; font-family:Arial; color: black">{{output_message}}</h1>
-        {% for d in data %}
-        {% for i in data %}
+        <h1 style="font-size: 20px; font-family:Verdana; color: black">{{output_message}}</h1>
+        {% for d in data[:21] %}
         <br><br>
-        <p style="font-size: 15px; font-family:Arial; color: black">subreddit: {{i}}</p>
-        <br>
-        {% endfor %}
+        <p style="font-size: 15px; font-family:Verdana; color: black; background-color: rgb(238, 238, 238); 
+            width: 400px; height: 60px; border-radius:5px">
+            <br>
+            subreddit:
+            {{d}} <br> </p>
         {% endfor %}
         {% endif %}
     </form>
