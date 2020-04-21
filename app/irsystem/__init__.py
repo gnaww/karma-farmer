@@ -11,4 +11,3 @@ irsystem = Blueprint(
 
 # Import all controllers
 from .controllers.search_controller import *
-from .controllers.populate_db_controller import *
