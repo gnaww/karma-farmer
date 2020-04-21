@@ -17,7 +17,7 @@ def fetch_data(subreddit):
         % (subreddit)
     )
     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
-    time.sleep(0.5)
+    # time.sleep(0.5)
     return res.json()["data"]
 
 
