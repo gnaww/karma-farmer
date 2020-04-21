@@ -1,5 +1,8 @@
 from nltk.tokenize import TweetTokenizer
-from . import db, Data, SUBREDDITS_LIST
+# from . import db, Data, SUBREDDITS_LIST
+from app.db import db
+from app.db import Data
+from app.db import SUBREDDITS_LIST
 import numpy as np
 import requests
 import json
@@ -88,3 +91,6 @@ def populate_db():
 
     # Persist changes to db
     db.session.commit()
+
+if __name__ == "__main__":
+    populate_db()
