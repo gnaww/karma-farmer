@@ -15,8 +15,18 @@ def fetch_data(subreddit):
         """https://api.pushshift.io/reddit/search/submission/?subreddit=%s&sort_type=score&sort=desc&size=50&after=30d&fields=score,selftext,title&over_18=false"""
         % (subreddit)
     )
+
+    print(subreddit, res.status_code)
+    # request failed because of too many requests in too little time
+    if res.status_code == 429:
+        while res.status_code != 200:
+            time.sleep(0.5)
+            res = requests.get(
+                """https://api.pushshift.io/reddit/search/submission/?subreddit=%s&sort_type=score&sort=desc&size=50&after=30d&fields=score,selftext,title&over_18=false"""
+                % (subreddit)
+            )
+            print(subreddit, res.status_code)
     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
-    # time.sleep(0.5)
     return res.json()["data"]
 
 
