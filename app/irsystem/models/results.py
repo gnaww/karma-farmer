@@ -20,31 +20,30 @@ def build_inverted_index(data):
                 inverted_index[w] = [(idx, word['frequency'], word['netScore'])]
     return inverted_index, id_to_subreddit
 
-# don't have enough docs yet to use min/max df
-# def compute_idf(inv_idx, n_docs, min_df=10, max_df_ratio=0.95):
-def compute_idf(index, n_docs):
+def compute_idf(index, n_docs, min_df=2, max_df_ratio=0.90):
     idf = {}
     for term in index:
         n_term = len(index[term])
-        # if n_term >= min_df and n_term/n_docs <= max_df_ratio:
-        idf[term] = math.log(n_docs/(1+n_term), 2)
+        if n_term >= min_df and n_term/n_docs <= max_df_ratio:
+            idf[term] = math.log(n_docs/(1+n_term), 2)
     return idf
 
 def compute_doc_norms(index, idf, n_docs):   
     doc_norms_freq, doc_norms_score = np.zeros(n_docs), np.zeros(n_docs)
     for term in index:
-        # don't need to check this condition unless we filter min/max df
-        # if term in idf:
-        for doc in index[term]:
-            doc_norms_freq[doc[0]] += (doc[1] * idf[term])**2
-            doc_norms_score[doc[0]] += (doc[2] * idf[term])**2
+        if term in idf:
+            for doc in index[term]:
+                doc_norms_freq[doc[0]] += (doc[1] * idf[term])**2
+                doc_norms_score[doc[0]] += (doc[2] * idf[term])**2
     doc_norms_freq = np.sqrt(doc_norms_freq)
     doc_norms_score = np.sqrt(doc_norms_score)
-    print(doc_norms_freq)
-    print(doc_norms_score)
+    # print(doc_norms_freq)
+    # print(doc_norms_score)
     return doc_norms_freq, doc_norms_score
 
 def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, id_to_subreddit, search_weight, score_weight):
+    print(search_weight)
+    print(score_weight)
     results = []
     results_mat = np.zeros(len(doc_norms_freq))
     
@@ -55,13 +54,11 @@ def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, 
     for term in query_counts:
         if term[0] in idf:
             query_norm += (term[1]*idf[term[0]])**2
-    query_norm = math.sqrt(query_norm)
-    
-    for term in query_counts:
-        if term[0] in index:
             docs = index[term[0]]
             for doc in docs:
                 results_mat[doc[0]] += search_weight*term[1]*doc[1]*idf[term[0]]**2 + score_weight*term[1]*doc[2]*idf[term[0]]**2
+
+    query_norm = math.sqrt(query_norm)
 
     for i, doc in enumerate(results_mat):
         den = query_norm * doc_norms_freq[i]
