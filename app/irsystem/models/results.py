@@ -44,7 +44,7 @@ def compute_doc_norms(index, idf, n_docs):
     print(doc_norms_score)
     return doc_norms_freq, doc_norms_score
 
-def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, id_to_subreddit, search_weight=0.95, score_weight=0.05):
+def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, id_to_subreddit, search_weight, score_weight):
     results = []
     results_mat = np.zeros(len(doc_norms_freq))
     
@@ -72,11 +72,13 @@ def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, 
     results = sorted(results, key=lambda x:x['score'], reverse=True)
     return results
 
-def get_results(query):
+def get_results(query, weight):
     data = get_data()
     n_subreddits = len(data)
     inv_idx, id_to_subreddit = build_inverted_index(data)
     idf = compute_idf(inv_idx, n_subreddits)
     doc_norms_freq, doc_norms_score = compute_doc_norms(inv_idx, idf, n_subreddits)
-    search = index_search(query, inv_idx, idf, doc_norms_freq, doc_norms_score, TreebankWordTokenizer(), id_to_subreddit)
+    search_weight = int(weight)/100
+    score_weight = 1 - search_weight
+    search = index_search(query, inv_idx, idf, doc_norms_freq, doc_norms_score, TreebankWordTokenizer(), id_to_subreddit, search_weight, score_weight)
     return search

@@ -26,7 +26,15 @@
 
         <div class="form-group">
             <textarea style="background-color: #ffffff;" rows="10" cols="10" id="input" type="text" name="search"
-                class="form-control" placeholder="My Post"></textarea>
+                class="form-control" placeholder="My Post">{{ query }}</textarea>
+        </div>
+        <div class="form-group" style="display: block;">
+            <label for="weight">How much do you care about the karma vs the relevancy of the results?</label>
+            <div style="display: block;">
+                <span>Karma</span>
+                    <input style="display: inline-block; width: 80%;" id="weight" type="range" name="weight" min="0" max="100" value={{ weight }}>
+                <span>Relevancy</span>
+            </div>
         </div>
         <br><br>
         <!--<h1 style="font-size: 50px; font-family:Arial; color: rgb(39, 39, 39)">
@@ -39,7 +47,7 @@
     <form class="form-inline global-search">
         {% if data %}
         <h1 style="font-size: 20px; font-family:Verdana; color: black">{{output_message}}</h1>
-        {% for d in data[:21] %}
+        {% for d in data[:11] %}
         <br><br>
         <p style="font-size: 15px; font-family:Verdana; color: black; background-color: rgb(238, 238, 238); 
             width: 400px; height: 60px; border-radius:5px">

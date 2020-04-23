@@ -9,6 +9,7 @@ net_id = "Brian Lu: bl694, Maria Silaban: djs488, Vivian Li: vml39, William Wang
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
+	weight = request.args.get('weight')
 	if not query:
 		data = []
 		count = 0
@@ -17,8 +18,8 @@ def search():
 		output_message = "Suggested Subreddits for: " + query
 		data = []
 		count = 0; 
-		for i in get_results(query):
+		for i in get_results(query, weight):
 			#data.append("subreddit: " + i['subreddit'] + ",   " + "score: " + str(i['score']))
 			data.append(i['subreddit'])
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, weight=weight)
 
