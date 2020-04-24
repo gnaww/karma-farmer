@@ -9,7 +9,9 @@ net_id = "Brian Lu: bl694, Maria Silaban: djs488, Vivian Li: vml39, William Wang
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
+	query = query if query else ""
 	weight = request.args.get('weight')
+	weight = weight if weight else 50
 	if not query:
 		data = []
 		count = 0
