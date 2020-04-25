@@ -40,7 +40,7 @@
 
 <body style="background-color:rgb(255, 255, 255)">
     <strong>
-        <p style="text-align:left; padding-left: 50px; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1); 
+        <p style="text-align:left; padding-left: 50px; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1);
                font-family: Verdana;">Karma-Farmer <i class="fas fa-tractor"></i></p>
     </strong>
     <form
@@ -79,11 +79,11 @@
         <h1 style="font-size: 20px; font-family: 'GlacialIndifferenceRegular'; color: black">{{output_message}}</h1>
         {% for d in data[:11] %}
         <br><br>
-        <p style="font-size: 15px; font-family: 'GlacialIndifferenceRegular'; color: black; background-color: rgb(238, 238, 238); 
+        <p style="font-size: 15px; font-family: 'GlacialIndifferenceRegular'; color: black; background-color: rgb(238, 238, 238);
             width: 400px; height: 60px; border-radius:5px">
-            <br>
+            <br> <a href=https://www.reddit.com/r/{{d}}/>
             subreddit:
-            {{d}} <br> </p>
+            {{d}} </a><br> </p>
         {% endfor %}
         {% endif %}
     </form>
