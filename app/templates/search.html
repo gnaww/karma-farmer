@@ -5,8 +5,18 @@
     <link rel="stylesheet" href="/static/main.css">
     <script src="https://kit.fontawesome.com/8ea94d6b77.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css" />
-    <script src="testjs.js"></script>
+    <!--<script src="app/templates/testjs.js"></script>-->
 
+    <script>
+        function validateForm() {
+            var x = document.forms["myForm"]["search"].value;
+            var y = x.split(" ");
+            if (y.length < 5) {
+                alert("Name must be filled out");
+                return false;
+            }
+        }
+    </script>
     <style>
         .slidecontainer {
             width: 100%;
@@ -57,7 +67,8 @@
             <option value="2" selected>Version 2</option>
         </select>
     </div>
-    <form style="text-align: center; font-family: 'GlacialIndifferenceRegular';">
+    <form name="myForm" onsubmit="return validateForm()"
+        style="text-align: center; font-family: 'GlacialIndifferenceRegular';">
         <h1 style="color:#383838;font-weight: bold;">
             What would you like to post?
         </h1>
@@ -67,7 +78,7 @@
         </div>
         <br><br>
 
-        <div class="form-group" style="display: block;font-family: 'GlacialIndifferenceRegular';">
+        <div class=" form-group" style="display: block;font-family: 'GlacialIndifferenceRegular';">
             <h1 for="weight" style="font-weight: bold; color:#383838"> What should we weigh more?</h1>
             <div style="display: block;">
                 <span>Karma</span>
@@ -78,10 +89,10 @@
             <br><br>
 
             <button onclick="location.href='#bottom'" type="submit" class="btn btn-info"
-                style="background-color: rgb(255, 86, 0, 1); color:white;">Tell Me!
+                style="background-color: rgb(255, 86, 0, 1); color:white;">Tell
+                Me!
             </button>
     </form>
-
 
     <br><br>
     <div id="bottom" style="text-align: center;">
