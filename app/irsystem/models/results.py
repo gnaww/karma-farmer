@@ -74,10 +74,10 @@ def index_search(query, index, idf, idf_score, doc_norms_freq, doc_norms_score, 
     
     for term in query_counts:
         if term[0] in idf:
-            query_norm += search_weight*(term[1]*idf[term[0]])**2 + score_weight*(idf_score[term[0]])**2
+            query_norm += search_weight*(term[1]*idf[term[0]])**2 + score_weight*(term[1]*idf_score[term[0]])**2
             docs = index[term[0]]
             for doc in docs:
-                results_mat[doc[0]] += search_weight*term[1]*doc[1]*idf[term[0]]**2 + score_weight*doc[2]*idf_score[term[0]]**2
+                results_mat[doc[0]] += search_weight*term[1]*doc[1]*idf[term[0]]**2 + score_weight*term[1]*doc[2]*idf_score[term[0]]**2
 
     query_norm = math.sqrt(query_norm)
 
