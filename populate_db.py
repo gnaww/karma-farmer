@@ -1,12 +1,12 @@
 from nltk.tokenize import TweetTokenizer
-# from . import db, Data, SUBREDDITS_LIST
-from app.db import db
-from app.db import Data
-from app.db import SUBREDDITS_LIST
+
+from app.db import db, Data
+from app.constants import SUBREDDITS_LIST, COMMON_WORDS
 import numpy as np
 import requests
 import json
 import time
+import string
 
 tweet_tokenizer = TweetTokenizer()
 
@@ -33,7 +33,6 @@ def fetch_data(subreddit):
     return res.json()["data"]
 
 
-# TODO: better algorithm?
 def process_data(data_arr):
     processed_data = np.zeros((0, 2), int)  # [frequency, score]
     index_counter = 0
@@ -67,6 +66,9 @@ def process_data(data_arr):
 def generate_strings(word_to_index, processed_matrix):
     str_arr = []
     for word in word_to_index:
+        # Skip punctuations or common words
+        if word in string.punctuation or word in COMMON_WORDS:
+            continue
         ind = word_to_index[word]
         frequency = int(processed_matrix[ind][0])
         netScore = int(processed_matrix[ind][1])
@@ -91,6 +93,7 @@ def populate_db():
 
     # Persist changes to db
     db.session.commit()
+
 
 if __name__ == "__main__":
     populate_db()
