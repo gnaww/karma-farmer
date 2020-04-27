@@ -18,13 +18,7 @@ def get_subreddit_info(subreddit):
         )
         print("[Getting subreddit info]", subreddit, res.status_code)
 
-        if (
-            res.status_code == 403 or res.status_code == 302
-        ):  # Successful request : Invalid subreddit
-            print("Invalid subreddit")
-            return (False, None, None)
-            break
-        elif res.status_code == 200:  # Successful request : Valid subreddit
+        if res.status_code == 200:  # Successful request : Valid subreddit
             print("Valid subreddit")
             data = res.json()["data"]
             if data["over18"]:  # Inappropriate subreddit
@@ -36,6 +30,10 @@ def get_subreddit_info(subreddit):
             description = html2text(description).strip()
             subscribers = data["subscribers"]
             return (True, description, subscribers)
+            break
+        elif res.status_code != 429:  # Successful request : Invalid subreddit
+            print("Invalid subreddit")
+            return (False, None, None)
             break
 
         time.sleep(0.5)  # Unsuccessful request: Try again with delay
@@ -76,12 +74,16 @@ def fetch_data(subreddit):
                 )
                 valid_posts_counter += 1
 
-                # If reached 50 text-based posts, return list.
+                # If reached 50 text-based posts OR no more results to fetch, return list.
                 # If not, do another iteration of while loop to get next batch of results to process
                 if valid_posts_counter == 50:
+                    print("[DONE] Valid posts :", valid_posts_counter)
                     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
                     return valid_posts
                     break
+
+            if len(children) == 0 or after is None:  # No more posts to process
+                return valid_posts
 
         time.sleep(0.5)  # Unsuccessful request: Try again with delay
 
@@ -153,10 +155,8 @@ def populate_db():
         fetched_data = fetch_data(subreddit)
         word_to_index, processed_data = process_data(fetched_data)
         str_arr = generate_strings(word_to_index, processed_data)
-        db.session.add(Data(subreddit, str_arr))
-
-    # Persist changes to db
-    db.session.commit()
+        db.session.add(Data(subreddit, sr_description, sr_subscribers, str_arr))
+        db.session.commit()
 
 
 if __name__ == "__main__":
