@@ -1,4 +1,5 @@
 from nltk.tokenize import TweetTokenizer
+from html2text import html2text
 
 from app.db import db, Data
 from app.constants import SUBREDDITS_LIST, COMMON_WORDS
@@ -11,26 +12,75 @@ import string
 tweet_tokenizer = TweetTokenizer()
 
 
-def fetch_data(subreddit):
-    # Sort by score descending
-    # Get top 50 results from past 30 days
-    res = requests.get(
-        """https://api.pushshift.io/reddit/search/submission/?subreddit=%s&sort_type=score&sort=desc&size=50&after=30d&fields=score,selftext,title&over_18=false"""
-        % (subreddit)
-    )
+def get_subreddit_info(subreddit):
+    while True:  # Fail-safe logic for 429 error code (too many requests)
+        res = requests.get("https://www.reddit.com/r/%s/about.json" % (subreddit))
+        print("[Getting subreddit info]", subreddit, res.status_code)
 
-    print(subreddit, res.status_code)
-    # request failed because of too many requests in too little time
-    if res.status_code == 429:
-        while res.status_code != 200:
-            time.sleep(0.5)
-            res = requests.get(
-                """https://api.pushshift.io/reddit/search/submission/?subreddit=%s&sort_type=score&sort=desc&size=50&after=30d&fields=score,selftext,title&over_18=false"""
-                % (subreddit)
-            )
-            print(subreddit, res.status_code)
-    # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
-    return res.json()["data"]
+        if res.status_code == 403:  # Successful request : Invalid subreddit
+            print("Invalid subreddit")
+            return (False, None, None)
+            break
+        elif res.status_code == 200:  # Successful request : Valid subreddit
+            print("Valid subreddit")
+            data = res.json()["data"]
+            if data["over18"]:  # Inappropriate subreddit
+                print("Inappropriate subreddit")
+                return (False, None, None)
+
+            # Return information about subreddit
+            description = data["public_description"]
+            description = html2text(description).strip()
+            subscribers = data["subscribers"]
+            return (True, description, subscribers)
+            break
+
+        time.sleep(0.5)  # Unsuccessful request: Try again with delay
+
+
+def fetch_data(subreddit):
+    valid_posts = []
+    valid_posts_counter = 0
+    after = ""  # request parameter for pagination view
+
+    while True:  # Fail-safe logic for 429 error code (too many requests)
+        # Get results from subreddit ranked by scores from last 30 days
+        res = requests.get(
+            "https://www.reddit.com/r/%s/top.json?t=month&limit=100&after=%s"
+            % (subreddit, after)
+        )
+        print("[Getting posts]", subreddit, res.status_code)
+        print("Valid posts :", valid_posts_counter)
+
+        if res.status_code == 200:  # Successful request
+            data = res.json()["data"]
+            after = data["after"]  # for next request
+            children = data["children"]
+
+            for post in children:  # loop through posts
+                post_data = post["data"]
+                # Skip post : inappropriate post OR empty post body
+                if post_data["over_18"] or post_data["selftext"] == "":
+                    continue
+
+                # Process post
+                valid_posts.append(
+                    {
+                        "score": post_data["score"],
+                        "selftext": post_data["selftext"],
+                        "title": post_data["title"],
+                    }
+                )
+                valid_posts_counter += 1
+
+                # If reached 50 text-based posts, return list.
+                # If not, do another iteration of while loop to get next batch of results to process
+                if valid_posts_counter == 50:
+                    # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
+                    return valid_posts
+                    break
+
+        time.sleep(0.5)  # Unsuccessful request: Try again with delay
 
 
 def process_data(data_arr):
@@ -86,7 +136,13 @@ def populate_db():
 
     # Process data for each subreddit
     for subreddit in SUBREDDITS_LIST:
+        sr_valid, sr_description, sr_subscribers = get_subreddit_info(subreddit)
+        # If invalid/inappropriate subreddit, skip processing information
+        if not sr_valid:
+            continue
+
         fetched_data = fetch_data(subreddit)
+        print(fetched_data[0], fetched_data[49])
         word_to_index, processed_data = process_data(fetched_data)
         str_arr = generate_strings(word_to_index, processed_data)
         db.session.add(Data(subreddit, str_arr))
