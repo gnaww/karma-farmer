@@ -71,7 +71,7 @@
             <h1 for="weight" style="font-weight: bold; color:#383838"> What should we weigh more?</h1>
             <div style="display: block;">
                 <span>Karma</span>
-                <input style="display: inline-block; width: 50%;" class="slider" id="weight" type="range" name="weight"
+                <input style="display: inline-block; width: 40%;" class="slider" id="weight" type="range" name="weight"
                     min="0" max="100" value={{ weight }}>
                 <span>Relevancy</span>
             </div>
@@ -89,11 +89,16 @@
         <h1 style="text-align: center; font-family: 'GlacialIndifferenceRegular'; color: black">
             {{output_message}}</h1>
         {% for d in data[:11] %}
-        <p style="font-size: 15px;font-family: 'GlacialIndifferenceRegular';">
+        <p style="font-family: 'GlacialIndifferenceRegular';">
             <hr class="dashed">
-            <a href=https://www.reddit.com/r/{{d}} />
-            subreddit:
-            {{d}} </a>
+            <strong>subreddit:</strong>
+            <a href=https://www.reddit.com/r/{{d['subreddit']}} />
+            {{d['subreddit']}}
+            </a>
+            <br>
+            <strong>score:</strong> {{d['score']}}
+            <br>
+            <strong>suggested words:</strong> {{d['suggested_words']}}
             <hr class="dashed">
             {% endfor %}
             {% endif %}

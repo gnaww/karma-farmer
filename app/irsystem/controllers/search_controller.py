@@ -20,12 +20,11 @@ def search():
 		count = 0
 		output_message = ''
 	else:
-		output_message = "Suggested Subreddits for: " + query
+		output_message = "Suggested Subreddits" 
 		data = []
 		count = 0
 		results = get_results(query, weight) if version == 2 else get_results_version1(query)
 		for i in results:
-			#data.append("subreddit: " + i['subreddit'] + ",   " + "score: " + str(i['score']))
-			data.append(i['subreddit'])
+			data.append(i)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, weight=weight, version=version)
 
