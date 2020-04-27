@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/static/main.css">
     <script src="https://kit.fontawesome.com/8ea94d6b77.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css" />
+    <script src="testjs.js"></script>
+
     <style>
         .slidecontainer {
             width: 100%;
@@ -35,16 +37,20 @@
             background: rgb(255, 86, 0, 1);
             cursor: pointer;
         }
+
+        hr.dashed {
+            border-top: 3px dashed #FF8b60;
+            width: 500px;
+        }
     </style>
 </head>
 
 <body style="background-color:rgb(255, 255, 255)">
     <strong>
-        <p style="text-align:left; padding-left: 50px; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1); 
+        <p style="text-align:left; padding-left: 50px; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1);
                font-family: Verdana;">Karma-Farmer <i class="fas fa-tractor"></i></p>
     </strong>
-    <form
-        style="display: block; position: relative; top:-10%; text-align: center; font-family: 'GlacialIndifferenceRegular';">
+    <form style="padding-top: 100px; text-align: center; font-family: 'GlacialIndifferenceRegular';">
         <h1 style="color:#383838; padding-bottom: 10px; font-weight: bold;">
             What would you like to post?
         </h1>
@@ -53,41 +59,50 @@
                 type="text" name="search" class="form-control" placeholder="My Post">{{ query }}</textarea>
         </div>
         <br><br>
-        <div
-            style="display: block; padding-left: 300px; padding-right: 300px; font-family: 'GlacialIndifferenceRegular';">
+        <div style="padding-left: 300px; padding-right: 300px; font-family: 'GlacialIndifferenceRegular';">
             <h1 for="weight" style="font-weight: bold; color:#383838"> What should we weigh more?</h1>
             <br>
             <div style="display: block;">
                 <!--<input style="display: inline-block; width: 80%;" id="weight" type="range" name="weight" min="0"
                     max="100" value={{ weight }}>-->
-                <input type="range" min="1" max="100" value="50" class="slider" id="weight" name="weight"
-                    value={{ weight }}>
+                <input type="range" min="1" max="100" class="slider" id="weight" name="weight" value={{ weight }}>
             </div>
             <span style="padding-right: 575px;">Karma</span>
-            <span style="text-align: right;">Relvancy</span>
+            <span style="text-align: right;">Relevancy</span>
+        </div>
+        <div>
+            <select id="version" name="version">
+                <option value="1">Version 1</option>
+                <option value="2" selected>Version 2</option>
+            </select>
         </div>
         <br><br>
         <!--<h1 style="font-size: 50px; font-family:Arial; color: rgb(39, 39, 39)">
             To Gain The Most Karma? style="height: 250px; width: 500px; text-align: center; word-break: break-word;"
         </h1>-->
 
-        <button type="submit" class="btn btn-info" style="background-color: rgb(255, 86, 0, 1); color:white;"> Tell Me!
+        <button onclick="location.href='#bottom'" type="submit" class="btn btn-info"
+            style="background-color: rgb(255, 86, 0, 1); color:white;">Tell Me!
         </button>
     </form>
-    <form class="form-inline global-search">
+    <br><br>
+    <div id="bottom" style="text-align: center;">
         {% if data %}
-        <h1 style="font-size: 20px; font-family: 'GlacialIndifferenceRegular'; color: black">{{output_message}}</h1>
+        <h1 style="text-align: center; font-family: 'GlacialIndifferenceRegular'; color: black">
+            {{output_message}}</h1>
         {% for d in data[:11] %}
-        <br><br>
-        <p style="font-size: 15px; font-family: 'GlacialIndifferenceRegular'; color: black; background-color: rgb(238, 238, 238); 
-            width: 400px; height: 60px; border-radius:5px">
-            <br>
+        <p style="font-size: 15px;font-family: 'GlacialIndifferenceRegular';">
+            <hr class="dashed">
+            <a href=https://www.reddit.com/r/{{d}} />
             subreddit:
-            {{d}} <br> </p>
-        {% endfor %}
-        {% endif %}
-    </form>
-    <p style="font-family: 'GlacialIndifferenceRegular'; text-align: center;">Student Name: ({{ netid }})</p>
+            {{d}} </a>
+            <hr class="dashed">
+            {% endfor %}
+            {% endif %}
+        </p>
+    </div>
+    <br><br>
 </body>
+<footer style="font-family: 'GlacialIndifferenceRegular'; text-align: center;">Student Name: ({{ netid }})</footer>
 
 </html>
