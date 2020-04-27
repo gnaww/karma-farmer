@@ -13,8 +13,8 @@ def search():
 	query = query if query else ""
 	weight = request.args.get('weight')
 	weight = weight if weight else 50
-	version = int(request.args.get('version'))
-	version = version if version else 2
+	version = request.args.get('version')
+	version = int(version) if version else 2
 	if not query:
 		data = []
 		count = 0
@@ -22,10 +22,10 @@ def search():
 	else:
 		output_message = "Suggested Subreddits for: " + query
 		data = []
-		count = 0; 
+		count = 0
 		results = get_results(query, weight) if version == 2 else get_results_version1(query)
 		for i in results:
 			#data.append("subreddit: " + i['subreddit'] + ",   " + "score: " + str(i['score']))
 			data.append(i['subreddit'])
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, weight=weight)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, weight=weight, version=version)
 
