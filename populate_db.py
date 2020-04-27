@@ -1,8 +1,6 @@
 from nltk.tokenize import TweetTokenizer
 from html2text import html2text
-
-from app.db import db, Data
-from app.constants import SUBREDDITS_LIST, COMMON_WORDS
+from app.db import db, Data, COMMON_WORDS
 import numpy as np
 import requests
 import json
@@ -14,10 +12,15 @@ tweet_tokenizer = TweetTokenizer()
 
 def get_subreddit_info(subreddit):
     while True:  # Fail-safe logic for 429 error code (too many requests)
-        res = requests.get("https://www.reddit.com/r/%s/about.json" % (subreddit))
+        res = requests.get(
+            "https://www.reddit.com/r/%s/about.json" % (subreddit),
+            allow_redirects=False,
+        )
         print("[Getting subreddit info]", subreddit, res.status_code)
 
-        if res.status_code == 403:  # Successful request : Invalid subreddit
+        if (
+            res.status_code == 403 or res.status_code == 302
+        ):  # Successful request : Invalid subreddit
             print("Invalid subreddit")
             return (False, None, None)
             break
@@ -134,6 +137,12 @@ def populate_db():
     db.drop_all()
     db.create_all()
 
+    # Get list of subreddits
+    with open("app/db/subreddits.json") as f:
+        data = json.load(f)
+        SUBREDDITS_LIST = data["subreddits"]
+        f.close()
+
     # Process data for each subreddit
     for subreddit in SUBREDDITS_LIST:
         sr_valid, sr_description, sr_subscribers = get_subreddit_info(subreddit)
@@ -142,7 +151,6 @@ def populate_db():
             continue
 
         fetched_data = fetch_data(subreddit)
-        print(fetched_data[0], fetched_data[49])
         word_to_index, processed_data = process_data(fetched_data)
         str_arr = generate_strings(word_to_index, processed_data)
         db.session.add(Data(subreddit, str_arr))
