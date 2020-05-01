@@ -7,4 +7,5 @@ vagrant/a4keypair.pem
 .idea/
 *.iml
 Pipfile
+Pipfile.lock
 .vscode/settings.json
