@@ -1,6 +1,6 @@
 from nltk.tokenize import TweetTokenizer
 from html2text import html2text
-from app.db import db, Data, COMMON_WORDS
+from app.db import db, Data, Metadata, COMMON_WORDS
 import numpy as np
 import requests
 import json
@@ -74,9 +74,9 @@ def fetch_data(subreddit):
                 )
                 valid_posts_counter += 1
 
-                # If reached 50 text-based posts OR no more results to fetch, return list.
+                # If reached 500 text-based posts OR no more results to fetch, return list.
                 # If not, do another iteration of while loop to get next batch of results to process
-                if valid_posts_counter == 50:
+                if valid_posts_counter == 500:
                     print("[DONE] Valid posts :", valid_posts_counter)
                     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
                     return valid_posts
@@ -92,7 +92,9 @@ def process_data(data_arr):
     processed_data = np.zeros((0, 2), int)  # [frequency, score]
     index_counter = 0
     word_to_index = {}
+    posts_tokenized = []
 
+    # For each post
     for data in data_arr:
         score = data["score"]
         # Make all text lowercase & account for empty fields
@@ -102,8 +104,20 @@ def process_data(data_arr):
         # Tokenize texts
         tokens = tweet_tokenizer.tokenize(body_text + " " + title_text)
 
+        # Array of valid tokens for post
+        post_tokens = []
+
         # Process each token
         for token in tokens:
+            # Skip punctuations or common words or single letters or token is a link
+            if (
+                token in string.punctuation
+                or token in COMMON_WORDS
+                or len(token) == 1
+                or "http" in token
+            ):
+                continue
+
             if token in word_to_index:
                 ind = word_to_index[token]
                 processed_data[ind][0] += 1  # Update frequency
@@ -115,15 +129,17 @@ def process_data(data_arr):
                 )
                 index_counter += 1
 
-    return (word_to_index, processed_data)
+            # Update tokens for post
+            post_tokens.append(token)
+
+        posts_tokenized.append(",".join(post_tokens))  # Stringify and append to list
+
+    return (word_to_index, processed_data, posts_tokenized)
 
 
 def generate_strings(word_to_index, processed_matrix):
     str_arr = []
     for word in word_to_index:
-        # Skip punctuations or common words
-        if word in string.punctuation or word in COMMON_WORDS:
-            continue
         ind = word_to_index[word]
         frequency = int(processed_matrix[ind][0])
         netScore = int(processed_matrix[ind][1])
@@ -153,9 +169,10 @@ def populate_db():
             continue
 
         fetched_data = fetch_data(subreddit)
-        word_to_index, processed_data = process_data(fetched_data)
-        str_arr = generate_strings(word_to_index, processed_data)
-        db.session.add(Data(subreddit, sr_description, sr_subscribers, str_arr))
+        word_to_index, processed_data, post_arr = process_data(fetched_data)
+        word_arr = generate_strings(word_to_index, processed_data)
+        db.session.add(Metadata(subreddit, sr_description, sr_subscribers, post_arr))
+        db.session.add(Data(subreddit, word_arr))
         db.session.commit()
 
 
