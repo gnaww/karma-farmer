@@ -26,5 +26,14 @@ def search():
 		results = get_results(query, weight) if version == 2 else get_results_v1(query)
 		for i in results:
 			data.append(i)
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, weight=weight, version=version)
+	return render_template(
+		'search.html',
+		name=project_name,
+		netid=net_id,
+		output_message=output_message,
+		data=data,
+		query=query,
+		weight=weight,
+		version=version
+	)
 

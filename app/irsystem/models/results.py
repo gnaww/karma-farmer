@@ -2,6 +2,7 @@ import math
 import numpy as np
 import string
 from app.db import Data
+from app.db import Metadata
 from nltk.tokenize import TweetTokenizer
 from spellchecker import SpellChecker
 
@@ -9,6 +10,60 @@ from spellchecker import SpellChecker
 def get_data():
     return [data.serialize() for data in Data.query.all()]
 
+def get_metadata():
+    metadata = [data.serialize() for data in Metadata.query.all()]
+    return {m["subreddit"]: (m["description"], m["subscribers"], m["posts"]) for m in metadata}
+
+def get_good_types(posts):
+    good_types = set()
+    for post in posts:
+        for word in post:
+            good_types.add(word)
+    good_types = np.array(list(good_types))
+    good_types_lookup = {k: v for v, k in enumerate(good_types)}
+    return good_types, good_types_lookup
+
+def build_cooccurrence_mat(posts, good_types_lookup):
+    tf_mat = np.zeros((len(posts), len(good_types_lookup)))
+    for idx, post in enumerate(posts):
+        for word in post:
+            word_idx = good_types_lookup[word]
+            tf_mat[idx, word_idx] += 1
+    cooccurrence_mat = np.dot(tf_mat.transpose(), tf_mat)
+    max_vals = np.amax(cooccurrence_mat, axis=0)
+    cooccurrence_mat = np.divide(cooccurrence_mat, max_vals)
+    return cooccurrence_mat
+
+def get_subreddit_metadata(subreddit, metadata, query, idf):
+    # TODO: get the words that have the highest cooccurrence with all of the words
+    description = metadata[subreddit][0]
+    subscribers = metadata[subreddit][1]
+    posts = metadata[subreddit][2]
+
+    query_idf = []
+    for term in query:
+        if term in idf:
+            query_idf.append((term, idf[term]))
+    query_idf = sorted(query_idf, key=lambda x: x[1], reverse=True)
+
+    good_types, good_types_lookup = get_good_types(posts)
+    cooccurrence_mat = build_cooccurrence_mat(posts, good_types_lookup)
+
+    for term in query_idf:
+        if term[0] in good_types_lookup.keys():
+            highest_weighted_term_idx = good_types_lookup[term[0]]
+            break
+    # get the word with the highest index score and top 3 words
+    highest_cooccur = cooccurrence_mat[highest_weighted_term_idx].argsort()[::-1]
+    suggested_words = []
+    i = 0
+    while len(suggested_words) < 3 and i < len(highest_cooccur):
+        word = good_types[highest_cooccur[i]]
+        print(word)
+        if word not in query:
+            suggested_words.append(word)
+        i += 1
+    return description, subscribers, suggested_words
 
 def build_inverted_index(data):
     id_to_subreddit = {}
@@ -30,10 +85,9 @@ def build_inverted_index(data):
                 max_score = word["netScore"]
     for word in inverted_index:
         w = inverted_index[word]
+        # TODO: shouldn't be dividing by max score because haven't filtered out words that are too frequent yet
         inverted_index[word] = [(i[0], i[1] / max_freq, i[2] / max_score) for i in w]
-    # somehow normalizing the inverted index has messed up results a lot
     return inverted_index, id_to_subreddit
-
 
 def normalize_max(idf):
     idf_sum = max([i[1] for i in idf.items()]) or 1
@@ -85,6 +139,7 @@ def index_search(
     id_to_subreddit,
     search_weight,
     score_weight,
+    metadata
 ):
     results = []
     results_mat = np.zeros(len(doc_norms_freq))
@@ -128,15 +183,26 @@ def index_search(
         den = 1
         score = doc / den
         results.append(
-            {"subreddit": id_to_subreddit[i], "score": score, "suggested_words": []}
+            {"subreddit": id_to_subreddit[i], "score": score}
         )
 
     results = list(filter(lambda x: x["score"] > 0, sorted(results, key=lambda x: x["score"], reverse=True)))
-    return results[:5]
+    results = results[:5]
+    for result in results:
+        description, subscribers, suggested_words = get_subreddit_metadata(
+                                                        result["subreddit"],
+                                                        metadata,
+                                                        set(query),
+                                                        idf)
+        result["description"] = description
+        result["subscribers"] = subscribers
+        result["suggested_words"] = suggested_words
+    return results
 
 
 def get_results(query, weight):
     data = get_data()
+    metadata = get_metadata()
     n_subreddits = len(data)
     inv_idx, id_to_subreddit = build_inverted_index(data)
     idf, idf_score = compute_idf(inv_idx, n_subreddits)
@@ -154,5 +220,6 @@ def get_results(query, weight):
         id_to_subreddit,
         search_weight,
         score_weight,
+        metadata
     )
     return search
