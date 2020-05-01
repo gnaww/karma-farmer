@@ -40,8 +40,6 @@ def compute_doc_norms(index, idf, n_docs):
             doc_norms_score[doc[0]] += (doc[2] * idf[term])**2
     doc_norms_freq = np.sqrt(doc_norms_freq)
     doc_norms_score = np.sqrt(doc_norms_score)
-    print(doc_norms_freq)
-    print(doc_norms_score)
     return doc_norms_freq, doc_norms_score
 
 def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, id_to_subreddit, search_weight=0.95, score_weight=0.05):
@@ -72,7 +70,7 @@ def index_search(query, index, idf, doc_norms_freq, doc_norms_score, tokenizer, 
     results = sorted(results, key=lambda x:x['score'], reverse=True)
     return results
 
-def get_results_version1(query):
+def get_results_v1(query):
     data = get_data()
     n_subreddits = len(data)
     inv_idx, id_to_subreddit = build_inverted_index(data)

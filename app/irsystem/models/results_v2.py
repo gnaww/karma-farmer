@@ -35,13 +35,10 @@ def build_inverted_index(data):
     return inverted_index, id_to_subreddit
 
 
-def normalize_max(idf):
+def normalize(idf):
     idf_sum = max([i[1] for i in idf.items()]) or 1
     return dict(map(lambda x: (x[0], x[1] / idf_sum), idf.items()))
 
-def normalize_avg(idf):
-    idf_avg = np.mean([i[1] for i in idf.items()]) or 1
-    return dict(map(lambda x: (x[0], x[1] / idf_avg), idf.items()))
 
 def compute_idf(index, n_docs, min_df=2, max_df_ratio=0.90):
     total_karma = 0
@@ -56,10 +53,12 @@ def compute_idf(index, n_docs, min_df=2, max_df_ratio=0.90):
         n_term = len(index[term])
         if n_term >= min_df and n_term / n_docs <= max_df_ratio:
             idf[term] = math.log(n_docs / (1 + n_term), 2)
+            # not sure if total karma is the best thing to divide
             idf_score[term] = math.log(
                 total_karma / (1 + sum([term[2] for term in index[term]])), 2
             )
-    return normalize_avg(idf), normalize_avg(idf_score)
+    return normalize(idf), normalize(idf_score)
+
 
 def compute_doc_norms(index, idf, n_docs):
     doc_norms_freq, doc_norms_score = np.zeros(n_docs), np.zeros(n_docs)
@@ -73,6 +72,7 @@ def compute_doc_norms(index, idf, n_docs):
     doc_norms_freq = doc_norms_freq / np.amax(doc_norms_freq)
     doc_norms_score = doc_norms_score / np.amax(doc_norms_score)
     return doc_norms_freq, doc_norms_score
+
 
 def index_search(
     query,
@@ -131,11 +131,11 @@ def index_search(
             {"subreddit": id_to_subreddit[i], "score": score, "suggested_words": []}
         )
 
-    results = list(filter(lambda x: x["score"] > 0, sorted(results, key=lambda x: x["score"], reverse=True)))
-    return results[:5]
+    results = sorted(results, key=lambda x: x["score"], reverse=True)
+    return results
 
 
-def get_results(query, weight):
+def get_results_v2(query, weight):
     data = get_data()
     n_subreddits = len(data)
     inv_idx, id_to_subreddit = build_inverted_index(data)
