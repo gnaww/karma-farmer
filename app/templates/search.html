@@ -20,6 +20,7 @@
 </head>
 
 <body style="background-color:rgb(255, 255, 255)">
+
     <a href="/">
         <strong>
             <p style="text-align:left; padding-left: 2%; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1);
@@ -27,6 +28,13 @@
             </p>
         </strong>
     </a>
+    <div style="left: 90%; position: absolute; top:2%;">
+        <select id="cars" onchange="location = this.value;">
+            <option value="https://karmafarmer.herokuapp.com/">Version 1</option>
+            <option value="https://karmafarmer-v2.herokuapp.com/">Version 2</option>
+            <option value="V3">Version 3</option>
+        </select>
+    </div>
     <form name="myForm" onsubmit="return validateForm()"
         style="text-align: center; font-family: 'GlacialIndifferenceRegular';">
         <h1 style="color:#383838;font-weight: bold;">
@@ -50,50 +58,55 @@
             </div>
         </div>
         <div>
-            <label for="suggested" style="font-weight: bold; color:#383838"> Get suggested words?</label>
-            <input style="display: inline-block; width: 40%;" id="suggested" type="checkbox" name="suggested" {{ suggested }}>
+            <h5 for="suggested" style="font-weight: bold; color:#383838"> Get suggested words?
+                <input style="display: inline-block; width: 40%;" id="suggested" type="checkbox" name="suggested"
+                    {{ suggested }}>
+            </h5>
         </div>
         <br><br>
 
-            <button type="submit" class="btn btn-info" style="background-color: rgb(255, 86, 0, 1); color:white;">
-                Suggest Me Some Subreddits!
-            </button>
+        <button onclick="location.href='#bottom'" type="submit" class="btn btn-info"
+            style="background-color: rgb(255, 86, 0, 1); color:white;">
+            Suggest Me Some Subreddits!
+        </button>
     </form>
 
     <br><br>
-    <div id="bottom" style="text-align: center;">
+    <div id="bottom" style="padding-left: 32%; padding-right: 32%;">
         <h1 style="text-align: center; font-family: 'GlacialIndifferenceRegular'; color: black">
             {{output_message}}
         </h1>
         {% if query %}
-            {% if data|length > 0 %}
-                {% for d in data %}
-                    <p style="font-family: 'GlacialIndifferenceRegular';">
-                        <strong>subreddit:</strong>
-                        <a href=https://reddit.com/r/{{d['subreddit']}} />
-                        r/{{d['subreddit']}}
-                        </a>
-                        <br>
-                        <strong>description:</strong> {{d['description']}}
-                        <br>
-                        <strong>subscribers:</strong> {{d['subscribers']}}
-                        <br>
-                        <strong>score:</strong> {{d['score']}}
-                        <br>
-                        <strong>karma score:</strong> {{d['karmaScore']}}
-                        <br>
-                        <strong>relevancy score:</strong> {{d['relevancyScore']}}
-                        <br>
-                        {% if d['suggested_words'] %}
-                        <strong>suggested words:</strong> {{d['suggested_words']}}
-                        <br>
-                        {% endif %}
-                        <hr class="dashed">
-                    </p>
-                {% endfor %}
-            {% else %}
-                <p>No relevant results found, please try a more specific query.</p>
+        {% if data|length > 0 %}
+        {% for d in data %}
+        <p style="font-family: 'GlacialIndifferenceRegular';">
+            <strong>subreddit:</strong>
+            <a href=https://reddit.com/r/{{d['subreddit']}} />
+            r/{{d['subreddit']}}
+            </a>
+            <span id="dots">...</span><span id="more"></span>
+            <br>
+            <strong>description:</strong> {{d['description']}}
+            <br>
+            <strong>subscribers:</strong> {{d['subscribers']}}
+            <br>
+            <strong>score:</strong> {{d['score']}}
+            <br>
+            <strong>karma score:</strong> {{d['karmaScore']}}
+            <br>
+            <strong>relevancy score:</strong> {{d['relevancyScore']}}
+            <br>
+            {% if d['suggested_words'] %}
+            <strong>suggested words:</strong> {{d['suggested_words']}}
+            <br>
             {% endif %}
+        </p>
+        <button onclick="myFunction()" id="myBtn">Read more</button>
+        <hr class="dashed">
+        {% endfor %}
+        {% else %}
+        <p>No relevant results found, please try a more specific query.</p>
+        {% endif %}
         {% endif %}
     </div>
     <br><br>
@@ -107,5 +120,22 @@
         karmaWeight.innerHTML = 100 - weightSelector.value + "%";
         relevancyWeight.innerHTML = weightSelector.value + "%";
     }, false);
+
+    function myFunction() {
+        var dots = document.getElementById("dots");
+        var moreText = document.getElementById("more");
+        var btnText = document.getElementById("myBtn");
+
+        if (dots.style.display === "none") {
+            dots.style.display = "inline";
+            btnText.innerHTML = "Read more";
+            moreText.style.display = "none";
+        } else {
+            dots.style.display = "none";
+            btnText.innerHTML = "Read less";
+            moreText.style.display = "inline";
+        }
+    }
 </script>
+
 </html>
