@@ -20,7 +20,7 @@ def search():
 		count = 0
 		output_message = ''
 	else:
-		output_message = "Suggested Subreddits" 
+		output_message = "Suggested Subreddits"
 		data = []
 		count = 0
 		results = get_results(query, weight, suggested) if version == 2 else get_results_v1(query)

@@ -59,31 +59,34 @@
 
     <br><br>
     <div id="bottom" style="text-align: center;">
-        {% if data %}
         <h1 style="text-align: center; font-family: 'GlacialIndifferenceRegular'; color: black">
-            {{output_message}}</h1>
-        {% for d in data %}
-        <p style="font-family: 'GlacialIndifferenceRegular';">
-            <hr class="dashed">
-            <strong>subreddit:</strong>
-            <a href=https://www.reddit.com/r/{{d['subreddit']}} />
-            {{d['subreddit']}}
-            </a>
-            <br>
-            <strong>description:</strong> {{d['description']}}
-            <br>
-            <strong>subscribers:</strong> {{d['subscribers']}}
-            <br>
-            <strong>score:</strong> {{d['score']}}
-            <br>
-            {% if d['suggested_words'] %}
-            <strong>suggested words:</strong> {{d['suggested_words']}}
-            <br>
-            {% endif %}
-            <hr class="dashed">
+            {{output_message}}
+        </h1>
+        {% if data|length > 0 %}
+            {% for d in data %}
+                <p style="font-family: 'GlacialIndifferenceRegular';">
+                    <hr class="dashed">
+                    <strong>subreddit:</strong>
+                    <a href=https://www.reddit.com/r/{{d['subreddit']}} />
+                    {{d['subreddit']}}
+                    </a>
+                    <br>
+                    <strong>description:</strong> {{d['description']}}
+                    <br>
+                    <strong>subscribers:</strong> {{d['subscribers']}}
+                    <br>
+                    <strong>score:</strong> {{d['score']}}
+                    <br>
+                    {% if d['suggested_words'] %}
+                    <strong>suggested words:</strong> {{d['suggested_words']}}
+                    <br>
+                    {% endif %}
+                    <hr class="dashed">
+                </p>
             {% endfor %}
-            {% endif %}
-        </p>
+        {% else %}
+            <p>No relevant results found, please try a more specific query.</p>
+        {% endif %}
     </div>
     <br><br>
 </body>
