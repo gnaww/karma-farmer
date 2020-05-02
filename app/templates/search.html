@@ -44,7 +44,12 @@
                     min="0" max="100" value={{ weight }}>
                 <span>Relevancy</span>
             </div>
-            <br><br>
+        </div>
+        <div>
+            <label for="suggested" style="font-weight: bold; color:#383838"> Get suggested words?</label>
+            <input style="display: inline-block; width: 40%;" id="suggested" type="checkbox" name="suggested" {{ suggested }}>
+        </div>
+        <br><br>
 
             <button onclick="location.href='#bottom'" type="submit" class="btn btn-info"
                 style="background-color: rgb(255, 86, 0, 1); color:white;">Tell
@@ -57,7 +62,7 @@
         {% if data %}
         <h1 style="text-align: center; font-family: 'GlacialIndifferenceRegular'; color: black">
             {{output_message}}</h1>
-        {% for d in data[:11] %}
+        {% for d in data %}
         <p style="font-family: 'GlacialIndifferenceRegular';">
             <hr class="dashed">
             <strong>subreddit:</strong>
@@ -65,8 +70,16 @@
             {{d['subreddit']}}
             </a>
             <br>
+            <strong>description:</strong> {{d['description']}}
+            <br>
+            <strong>subscribers:</strong> {{d['subscribers']}}
+            <br>
             <strong>score:</strong> {{d['score']}}
             <br>
+            {% if d['suggested_words'] %}
+            <strong>suggested words:</strong> {{d['suggested_words']}}
+            <br>
+            {% endif %}
             <hr class="dashed">
             {% endfor %}
             {% endif %}
