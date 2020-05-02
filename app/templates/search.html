@@ -10,9 +10,9 @@
     <script>
         function validateForm() {
             var x = document.forms["myForm"]["search"].value;
-            var y = x.split(" ");
+            var y = x.split(/\s/);
             if (y.length < 5) {
-                alert("Your post must have at least 5 words");
+                alert("Your post must have at least 5 words!");
                 return false;
             }
         }
@@ -20,11 +20,13 @@
 </head>
 
 <body style="background-color:rgb(255, 255, 255)">
-    <strong>
-        <p style="text-align:left; padding-left: 2%; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1);
-               font-family: Verdana;">Karma-Farmer <i class="fas fa-tractor"></i>
-        </p>
-    </strong>
+    <a href="/">
+        <strong>
+            <p style="text-align:left; padding-left: 2%; position: absolute; top:2%; font-size: 25px; color: rgb(255, 86, 0, 1);
+                font-family: Verdana;">Karma-Farmer <i class="fas fa-tractor"></i>
+            </p>
+        </strong>
+    </a>
     <form name="myForm" onsubmit="return validateForm()"
         style="text-align: center; font-family: 'GlacialIndifferenceRegular';">
         <h1 style="color:#383838;font-weight: bold;">
@@ -36,13 +38,15 @@
         </div>
         <br><br>
 
-        <div class=" form-group" style="display: block;font-family: 'GlacialIndifferenceRegular';">
+        <div class="form-group" style="display: block;font-family: 'GlacialIndifferenceRegular';">
             <h1 for="weight" style="font-weight: bold; color:#383838"> What should we weigh more?</h1>
             <div style="display: block;">
-                <span>Karma</span>
+                <span>Potential Karma</span>
+                <span id="karmaWeight">{{ weight }}%</span>
                 <input style="display: inline-block; width: 40%;" class="slider" id="weight" type="range" name="weight"
                     min="0" max="100" value={{ weight }}>
-                <span>Relevancy</span>
+                <span>Relevancy of Subreddit</span>
+                <span id="relevancyWeight">{{ weight }}%</span>
             </div>
         </div>
         <div>
@@ -62,34 +66,43 @@
         <h1 style="text-align: center; font-family: 'GlacialIndifferenceRegular'; color: black">
             {{output_message}}
         </h1>
-        {% if data|length > 0 %}
-            {% for d in data %}
-                <p style="font-family: 'GlacialIndifferenceRegular';">
-                    <hr class="dashed">
-                    <strong>subreddit:</strong>
-                    <a href=https://www.reddit.com/r/{{d['subreddit']}} />
-                    {{d['subreddit']}}
-                    </a>
-                    <br>
-                    <strong>description:</strong> {{d['description']}}
-                    <br>
-                    <strong>subscribers:</strong> {{d['subscribers']}}
-                    <br>
-                    <strong>score:</strong> {{d['score']}}
-                    <br>
-                    {% if d['suggested_words'] %}
-                    <strong>suggested words:</strong> {{d['suggested_words']}}
-                    <br>
-                    {% endif %}
-                    <hr class="dashed">
-                </p>
-            {% endfor %}
-        {% else %}
-            <p>No relevant results found, please try a more specific query.</p>
+        {% if query %}
+            {% if data|length > 0 %}
+                {% for d in data %}
+                    <p style="font-family: 'GlacialIndifferenceRegular';">
+                        <strong>subreddit:</strong>
+                        <a href=https://www.reddit.com/r/{{d['subreddit']}} />
+                        r/{{d['subreddit']}}
+                        </a>
+                        <br>
+                        <strong>description:</strong> {{d['description']}}
+                        <br>
+                        <strong>subscribers:</strong> {{d['subscribers']}}
+                        <br>
+                        <strong>score:</strong> {{d['score']}}
+                        <br>
+                        {% if d['suggested_words'] %}
+                        <strong>suggested words:</strong> {{d['suggested_words']}}
+                        <br>
+                        {% endif %}
+                        <hr class="dashed">
+                    </p>
+                {% endfor %}
+            {% else %}
+                <p>No relevant results found, please try a more specific query.</p>
+            {% endif %}
         {% endif %}
     </div>
     <br><br>
 </body>
 <footer style="font-family: 'GlacialIndifferenceRegular'; text-align: center;">Student Name: ({{ netid }})</footer>
-
+<script>
+    let weightSelector = document.getElementById("weight");
+    let karmaWeight = document.getElementById("karmaWeight");
+    let relevancyWeight = document.getElementById("relevancyWeight");
+    weightSelector.addEventListener('input', () => {
+        karmaWeight.innerHTML = 100 - weightSelector.value + "%";
+        relevancyWeight.innerHTML = weightSelector.value + "%";
+    }, false);
+</script>
 </html>
