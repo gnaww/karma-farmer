@@ -55,9 +55,8 @@
         </div>
         <br><br>
 
-            <button onclick="location.href='#bottom'" type="submit" class="btn btn-info"
-                style="background-color: rgb(255, 86, 0, 1); color:white;">Tell
-                Me!
+            <button type="submit" class="btn btn-info" style="background-color: rgb(255, 86, 0, 1); color:white;">
+                Suggest Me Some Subreddits!
             </button>
     </form>
 
@@ -71,7 +70,7 @@
                 {% for d in data %}
                     <p style="font-family: 'GlacialIndifferenceRegular';">
                         <strong>subreddit:</strong>
-                        <a href=https://www.reddit.com/r/{{d['subreddit']}} />
+                        <a href=https://reddit.com/r/{{d['subreddit']}} />
                         r/{{d['subreddit']}}
                         </a>
                         <br>
@@ -80,6 +79,10 @@
                         <strong>subscribers:</strong> {{d['subscribers']}}
                         <br>
                         <strong>score:</strong> {{d['score']}}
+                        <br>
+                        <strong>karma score:</strong> {{d['karmaScore']}}
+                        <br>
+                        <strong>relevancy score:</strong> {{d['relevancyScore']}}
                         <br>
                         {% if d['suggested_words'] %}
                         <strong>suggested words:</strong> {{d['suggested_words']}}

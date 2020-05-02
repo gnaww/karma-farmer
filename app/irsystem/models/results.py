@@ -60,7 +60,7 @@ def get_suggested_words(subreddit, metadata, query, idf):
         if term[0] in good_types_lookup.keys():
             highest_weighted_terms.append(good_types_lookup[term[0]])
         i += 1
-    
+
     highest_cooccur = []
     for i in range(len(good_types)):
         occur_val = 0
@@ -194,13 +194,16 @@ def index_search(
         den = query_norm * (
             search_weight * doc_norms_freq[i] + score_weight * doc_norms_score[i]
         )
-        den = 1
-        score = doc / den
+        karma_den = query_norm * score_weight * doc_norms_score[i]
+        relevancy_den = query_norm * search_weight * doc_norms_freq[i]
+        score = doc / (den if den else 1)
+        karma_score = doc / (karma_den if karma_den else 1)
+        relevancy_score = doc / (relevancy_den if relevancy_den else 1)
         results.append(
-            {"subreddit": id_to_subreddit[i], "score": score}
+            {"subreddit": id_to_subreddit[i], "score": score, "karmaScore": karma_score, "relevancyScore": relevancy_score}
         )
 
-    results = list(filter(lambda x: x["score"] > 0, sorted(results, key=lambda x: x["score"], reverse=True)))
+    results = list(sorted(filter(lambda x: x["score"] > 0, results), key=lambda x: x["score"], reverse=True))
     results = results[:5]
     for result in results:
         description, subscribers = get_subreddit_metadata(result["subreddit"], metadata)
@@ -209,7 +212,7 @@ def index_search(
                                               set(query),
                                               idf) if get_suggested else None
         result["description"] = description
-        result["subscribers"] = subscribers
+        result["subscribers"] = "{:,}".format(subscribers)
         result["suggested_words"] = suggested_words
     return results
 
