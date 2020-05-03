@@ -9,40 +9,89 @@
         padding: 20px 0;
         text-align:center;
     }
+
     body {
         padding-top: 15%;
         padding-bottom: 15px;
     }
+
     .global-search {
         text-align:center;
         padding:10px;
     }
+
     .global-search .form-control {
         width:500px;
     }
+
     .global-search * {
         display:inline-block;
         margin-bottom:0;
     }
 }
 
-.topcorner{
-    position:absolute;
+.logo {
+    text-align:left;
+    padding-left: 2%;
+    position: absolute;
     top:2%;
-    right:2%;
-}
-.topleftcorner{
-    text-align: right;
-    padding:50px
-}
-.btn{
-    background-color: gray;
-    border: none
-}
-.step-links a{
-    color:gray;
+    font-size: 25px;
+    color: rgb(255, 86, 0, 1);
+    font-family: Verdana;
 }
 
+.version-select {
+    left: 90%;
+    position: absolute;
+    top: 2%;
+}
+
+.query-form {
+    text-align: center;
+    font-family: 'GlacialIndifferenceRegular';
+}
+
+.title {
+    color: #383838;
+    font-weight: bold;
+}
+
+.query-input {
+    display: block;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+.form-control {
+    background-color: #ffffff;
+}
+
+.form-group {
+    display: block;
+    font-family: 'GlacialIndifferenceRegular';
+}
+
+.form-group h1 {
+    font-weight: bold;
+    color: #383838;
+}
+
+.btn{
+    background-color: gray;
+    border: none;
+    background-color: rgb(255, 86, 0, 1);
+    color: white;
+}
+
+.suggested {
+    font-weight: bold;
+    color: #383838;
+}
+
+.suggested input {
+    display: inline-block;
+    width: 40%;
+}
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -72,6 +121,8 @@
     opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
+    display: inline-block !important;
+    width: 40% !important;
 }
 
 .slider::-webkit-slider-thumb {
@@ -92,9 +143,30 @@
 
 hr.dashed {
     border-top: 3px dashed #FF8b60;
-    width: 55%;
+    width: 100%;
 }
 
 #suggested {
     width: auto !important;
+}
+
+#bottom {
+    padding-left: 32%;
+    padding-right: 32%;
+}
+
+#bottom h1 {
+    text-align: center;
+    font-family: 'GlacialIndifferenceRegular';
+    color: black;
+}
+
+.result {
+    font-family: 'GlacialIndifferenceRegular';
+    padding: 30px;
+}
+
+footer {
+    font-family: 'GlacialIndifferenceRegular';
+    text-align: center;
 }
