@@ -213,7 +213,7 @@ def index_search(
                                               idf) if get_suggested else None
         result["description"] = description
         result["subscribers"] = "{:,}".format(subscribers)
-        result["suggested_words"] = suggested_words
+        result["suggested_words"] = ", ".join(suggested_words)
     return results
 
 
