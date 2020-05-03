@@ -23,6 +23,31 @@
             <option value="V3">Version 3</option>
         </select>
     </div>
+    <form name="query-form" onsubmit="validateForm()" class="query-form">
+        <h1 class="title">
+            What would you like to post?
+        </h1>
+        <div class="query-input">
+            <textarea rows="10" cols="10" id="input" type="text" name="search" class="form-control" placeholder="My Post">{{ query }}</textarea>
+        </div>
+        <br><br>
+
+        <div class="form-group">
+            <h1 for="weight"> What should we weigh more?</h1>
+            <div>
+                <span>Potential Karma</span>
+                <span id="karmaWeight">{{ 100 - weight|int }}%</span>
+                <input class="slider" id="weight" type="range" name="weight" min="0" max="100" value={{ weight }}>
+                <span>Relevancy of Subreddit</span>
+                <span id="relevancyWeight">{{ weight }}%</span>
+            </div>
+        </div>
+        <div>
+            <h5 for="suggested" class="suggested"> Get suggested words?
+                <input id="suggested" type="checkbox" name="suggested" {{ suggested }}>
+            </h5>
+        </div>
+        <br><br>
 
     <div style="background-color:#545452">
 
