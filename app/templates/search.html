@@ -25,7 +25,7 @@
     <div style="background-color:#545452">
 
         <div style=" padding-left: 5%; padding-right: 5%;">
-            <div style="background-color: rgb(239, 239, 237, 1);">
+            <div style="background-color: 	#d5dce3">
                 <br><br>
                 <div style="padding-left: 3%; padding-right: 3%;">
                     <form name="query-form" onsubmit="validateForm()" class="query-form">
@@ -99,8 +99,9 @@
                         class="result-values">{{ d['relevancyScore'] }}</span>
                     <br>
                     {% if d['suggested_words'] %}
-                    <strong class="result-categories">&nbsp;&nbsp;suggested words&nbsp;&nbsp; </strong>
+                    <strong class="result-suggest">&nbsp;&nbsp;suggested words&nbsp;&nbsp; </strong>
                     &nbsp;&nbsp;<span class="result-values">{{ d['suggested_words'] }}</span>
+                    <br>
                     {% endif %}
                     <div id="{{d['subreddit']}}_info" style="display:none;">
                         <strong class="result-more">&nbsp;&nbsp;description&nbsp;&nbsp;</strong>
