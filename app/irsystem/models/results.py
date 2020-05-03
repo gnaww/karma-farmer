@@ -194,8 +194,8 @@ def index_search(
         den = query_norm * (
             search_weight * doc_norms_freq[i] + score_weight * doc_norms_score[i]
         )
-        karma_den = query_norm * score_weight * doc_norms_score[i]
-        relevancy_den = query_norm * search_weight * doc_norms_freq[i]
+        karma_den = query_norm * doc_norms_score[i]
+        relevancy_den = query_norm * doc_norms_freq[i]
         score = doc / (den if den else 1)
         karma_score = doc / (karma_den if karma_den else 1)
         relevancy_score = doc / (relevancy_den if relevancy_den else 1)
