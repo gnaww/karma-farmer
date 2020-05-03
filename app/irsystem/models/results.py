@@ -1,18 +1,10 @@
 import math
 import numpy as np
 import string
-from app.db import Data
-from app.db import Metadata
+from app.db import Data, Metadata
 from nltk.tokenize import TweetTokenizer
 from spellchecker import SpellChecker
 
-
-def get_data():
-    return [data.serialize() for data in Data.query.all()]
-
-def get_metadata():
-    metadata = [data.serialize() for data in Metadata.query.all()]
-    return {m["subreddit"]: (m["description"], m["subscribers"], m["posts"]) for m in metadata}
 
 def get_subreddit_metadata(subreddit, metadata):
     description = metadata[subreddit][0]
@@ -41,9 +33,7 @@ def build_cooccurrence_mat(posts, good_types, good_types_lookup, idf):
 
     return cooccurrence_mat
 
-def get_suggested_words(subreddit, metadata, query, idf):
-    posts = metadata[subreddit][2]
-
+def get_suggested_words(posts, query, idf):
     query_idf = []
     for term in query:
         if term in idf:
@@ -152,7 +142,6 @@ def index_search(
     id_to_subreddit,
     search_weight,
     score_weight,
-    metadata,
     get_suggested
 ):
     results = []
@@ -205,12 +194,14 @@ def index_search(
 
     results = list(sorted(filter(lambda x: x["score"] > 0, results), key=lambda x: x["score"], reverse=True))
     results = results[:5]
-    for result in results:
-        description, subscribers = get_subreddit_metadata(result["subreddit"], metadata)
-        suggested_words = get_suggested_words(result["subreddit"],
-                                              metadata,
+    for ind, result in enumerate(results):
+        metadata = Metadata.query.filter_by(subreddit=result["subreddit"]).first().serialize()
+        description = metadata["description"]
+        subscribers = metadata["subscribers"]
+        posts = metadata["posts"]
+        suggested_words = get_suggested_words(posts,
                                               set(query),
-                                              idf) if get_suggested else None
+                                              idf) if get_suggested and ind==0 else None
         result["description"] = description
         result["subscribers"] = "{:,}".format(subscribers)
         result["suggested_words"] = ", ".join(suggested_words) if suggested_words else None
@@ -218,8 +209,7 @@ def index_search(
 
 
 def get_results(query, weight, get_suggested):
-    data = get_data()
-    metadata = get_metadata()
+    data = [data.serialize() for data in Data.query.all()]
     n_subreddits = len(data)
     inv_idx, id_to_subreddit = build_inverted_index(data)
     idf, idf_score = compute_idf(inv_idx, n_subreddits)
@@ -237,7 +227,6 @@ def get_results(query, weight, get_suggested):
         id_to_subreddit,
         search_weight,
         score_weight,
-        metadata,
         get_suggested
     )
     return search

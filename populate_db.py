@@ -74,9 +74,9 @@ def fetch_data(subreddit):
                 )
                 valid_posts_counter += 1
 
-                # If reached 500 text-based posts OR no more results to fetch, return list.
+                # If reached 200 text-based posts OR no more results to fetch, return list.
                 # If not, do another iteration of while loop to get next batch of results to process
-                if valid_posts_counter == 500:
+                if valid_posts_counter == 200:
                     print("[DONE] Valid posts :", valid_posts_counter)
                     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
                     return valid_posts
@@ -85,7 +85,7 @@ def fetch_data(subreddit):
             if len(children) == 0 or after is None:  # No more posts to process
                 return valid_posts
 
-        time.sleep(0.5)  # Unsuccessful request: Try again with delay
+        time.sleep(1)  # Unsuccessful request: Try again with delay
 
 
 def process_data(data_arr):
