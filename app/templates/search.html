@@ -9,6 +9,7 @@
 </head>
 
 <body>
+
     <a href="/">
         <strong>
             <p class="logo">Karma-Farmer <i class="fas fa-tractor"></i>
@@ -22,74 +23,101 @@
             <option value="V3">Version 3</option>
         </select>
     </div>
-    <form name="query-form" onsubmit="validateForm()" class="query-form">
-        <h1 class="title">
-            What would you like to post?
-        </h1>
-        <div class="query-input">
-            <textarea rows="10" cols="10" id="input" type="text" name="search" class="form-control" placeholder="My Post">{{ query }}</textarea>
-        </div>
-        <br><br>
 
-        <div class="form-group">
-            <h1 for="weight"> What should we weigh more?</h1>
-            <div>
-                <span>Potential Karma</span>
-                <span id="karmaWeight">{{ weight }}%</span>
-                <input class="slider" id="weight" type="range" name="weight" min="0" max="100" value={{ weight }}>
-                <span>Relevancy of Subreddit</span>
-                <span id="relevancyWeight">{{ weight }}%</span>
-            </div>
-        </div>
-        <div>
-            <h5 for="suggested" class="suggested"> Get suggested words?
-                <input id="suggested" type="checkbox" name="suggested" {{ suggested }}>
-            </h5>
-        </div>
-        <br><br>
+    <div style="background-color:#545452">
 
-        <button onclick="location.href='#bottom'" type="submit" class="btn">
-            Suggest Me Some Subreddits!
-        </button>
-    </form>
+        <div style=" padding-left: 5%; padding-right: 5%;">
+            <div style="background-color: rgb(239, 239, 237, 1);">
+                <br><br>
+                <div style="padding-left: 2%; padding-right: 2%;">
+                    <form name="query-form" onsubmit="validateForm()" class="query-form">
+                        <br>
+                        <h1 class="title">
+                            What would you like to post?
+                        </h1>
+                        <div class="query-input">
+                            <textarea rows="10" cols="10" id="input" type="text" name="search" class="form-control"
+                                placeholder="My Post">{{ query }}</textarea>
+                        </div>
 
-    <br><br>
-    <div id="bottom">
-        <h1>{{ output_message }}</h1>
-        {% if query %}
-            {% if data|length > 0 %}
-                {% for d in data %}
-                    <div class="result">
-                        <strong>subreddit:</strong>
-                        <a href="https://reddit.com/r/{{ d['subreddit'] }}"/>
-                        r/{{d['subreddit']}}
-                        </a>
-                        <br>
-                        <strong>score:</strong> {{ d['score'] }}
-                        <br>
-                        <strong>karma score:</strong> {{ d['karmaScore'] }}
-                        <br>
-                        <strong>relevancy score:</strong> {{ d['relevancyScore'] }}
-                        <br>
-                        {% if d['suggested_words'] %}
-                            <strong>suggested words:</strong> {{ d['suggested_words'] }}
-                        {% endif %}
-                        <div id="{{d['subreddit']}}_info" style="display:none;">
-                            <strong>description:</strong> {{d['description']}}
-                            <br>
-                            <strong>subscribers:</strong> {{d['subscribers']}}
+                        <div>
+                            <h5 for="suggested" class="suggested"> <input id="suggested" type="checkbox"
+                                    name="suggested" {{ suggested }}> I Want Suggested Words
+                            </h5>
                         </div>
                         <br>
-                        <button onclick="toggleDetails()" id="{{d['subreddit']}}_button">Read more</button>
-                    </div>
-                    <hr class="dashed">
-                {% endfor %}
-            {% else %}
-                <p>No relevant results found, please try a more specific query.</p>
-            {% endif %}
-        {% endif %}
+
+                        <div class="form-group">
+                            <h1 for="weight"> What should we weigh more?</h1>
+                            <br>
+                            <p class="slider-label-left">Potential Karma</p>
+                            <p class="slider-label-right">Relevancy of Subreddit</p>
+                            <br>
+                            <div>
+                                <div>
+                                    <span class="slider-labels" id="karmaWeight">{{ weight }}%</span> &nbsp;
+                                    <input class="slider" id="weight" type="range" name="weight" min="0" max="100"
+                                        value={{ weight }}>
+                                    &nbsp;
+                                    <span class="slider-labels" id="relevancyWeight">{{ weight }}%</span>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+
+
+                        <button onclick="location.href='#bottom'" type="submit" class="btn">
+                            Show Me Subreddits!
+                        </button>
+                        <br> <br>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
     </div>
-    <br><br>
+
+    <div style="background-color:#545452">
+        <div style="padding-left: 5%; padding-right: 5%;">
+            <div class="form-group" id="bottom">
+                <br>
+                <h1>{{ output_message }}</h1>
+                {% if query %}
+                {% if data|length > 0 %}
+                {% for d in data %}
+                <div class="result">
+                    <strong>subreddit:</strong>
+                    <a href="https://reddit.com/r/{{ d['subreddit'] }}" />
+                    r/{{d['subreddit']}}
+                    </a>
+                    <br>
+                    <strong>score:</strong> {{ d['score'] }}
+                    <br>
+                    <strong>karma score:</strong> {{ d['karmaScore'] }}
+                    <br>
+                    <strong>relevancy score:</strong> {{ d['relevancyScore'] }}
+                    <br>
+                    {% if d['suggested_words'] %}
+                    <strong>suggested words:</strong> {{ d['suggested_words'] }}
+                    {% endif %}
+                    <div id="{{d['subreddit']}}_info" style="display:none;">
+                        <strong>description:</strong> {{d['description']}}
+                        <br>
+                        <strong>subscribers:</strong> {{d['subscribers']}}
+                    </div>
+                    <br>
+                    <button class="more-btn" onclick="toggleDetails()" id="{{d['subreddit']}}_button">More</button>
+                </div>
+                <br>
+                {% endfor %}
+                {% else %}
+                <p>No relevant results found, please try a more specific query.</p>
+                {% endif %}
+                {% endif %}
+                <br>
+            </div>
+        </div>
+    </div>
 </body>
 <footer>Student Name: ({{ netid }})</footer>
 <script>
@@ -114,11 +142,11 @@
         let id = event.target.id.slice(0, -7);
         let info = document.getElementById(id + "_info");
         if (info.style.display === "none") {
-            event.target.innerHTML = "Read less";
+            event.target.innerHTML = "Less";
             info.style.display = "block";
         }
         else {
-            event.target.innerHTML = "Read more";
+            event.target.innerHTML = "More";
             info.style.display = "none";
         }
     }
