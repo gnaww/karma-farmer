@@ -28,7 +28,7 @@
         <div style=" padding-left: 5%; padding-right: 5%;">
             <div style="background-color: rgb(239, 239, 237, 1);">
                 <br><br>
-                <div style="padding-left: 2%; padding-right: 2%;">
+                <div style="padding-left: 3%; padding-right: 3%;">
                     <form name="query-form" onsubmit="validateForm()" class="query-form">
                         <br>
                         <h1 class="title">
@@ -85,24 +85,30 @@
                 {% if data|length > 0 %}
                 {% for d in data %}
                 <div class="result">
-                    <strong>subreddit:</strong>
-                    <a href="https://reddit.com/r/{{ d['subreddit'] }}" />
+                    <strong class="result-subreddit">&nbsp;&nbsp;subreddit&nbsp;&nbsp;</strong>
+                    <a class="result-values" href="https://reddit.com/r/{{ d['subreddit'] }}" />
                     r/{{d['subreddit']}}
                     </a>
                     <br>
-                    <strong>score:</strong> {{ d['score'] }}
+                    <strong class="result-categories">&nbsp;&nbsp;score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
+                        class="result-values">{{ d['score'] }}</span>
                     <br>
-                    <strong>karma score:</strong> {{ d['karmaScore'] }}
+                    <strong class="result-categories">&nbsp;&nbsp;karma score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
+                        class="result-values">{{ d['karmaScore'] }}</span>
                     <br>
-                    <strong>relevancy score:</strong> {{ d['relevancyScore'] }}
+                    <strong class="result-categories">&nbsp;&nbsp;relevancy score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
+                        class="result-values">{{ d['relevancyScore'] }}</span>
                     <br>
                     {% if d['suggested_words'] %}
-                    <strong>suggested words:</strong> {{ d['suggested_words'] }}
+                    <strong class="result-categories">&nbsp;&nbsp;suggested words&nbsp;&nbsp; </strong>
+                    &nbsp;&nbsp;<span class="result-values">{{ d['suggested_words'] }}</span>
                     {% endif %}
                     <div id="{{d['subreddit']}}_info" style="display:none;">
-                        <strong>description:</strong> {{d['description']}}
+                        <strong class="result-more">&nbsp;&nbsp;description&nbsp;&nbsp;</strong>
+                        &nbsp;&nbsp;<span class="result-values"> {{d['description']}}</span>
                         <br>
-                        <strong>subscribers:</strong> {{d['subscribers']}}
+                        <strong class="result-more">&nbsp;&nbsp;subscribers&nbsp;&nbsp;</strong> &nbsp;&nbsp;<span
+                            class="result-values">{{d['subscribers']}}</span>
                     </div>
                     <br>
                     <button class="more-btn" onclick="toggleDetails()" id="{{d['subreddit']}}_button">More</button>

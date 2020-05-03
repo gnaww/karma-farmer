@@ -97,7 +97,7 @@
     opacity: 90%;
     color: black;
     font-weight: medium;
-    font-size: small;
+    font-size: medium;
     border-radius: 5px;
 }
 
@@ -214,6 +214,49 @@ hr.dashed {
     font-family: 'GlacialIndifferenceRegular';
     padding:15px;
     background-color:white;
+
+}
+
+.result-subreddit {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background-color: rgb(255, 86, 0, 1);
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-categories {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background: #3BCB56;
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-more {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background: #DEBE22;
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-values {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: medium;
+    font-weight: lighter;
 
 }
 
