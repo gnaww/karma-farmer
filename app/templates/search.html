@@ -6,16 +6,6 @@
     <script src="https://kit.fontawesome.com/8ea94d6b77.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css" />
     <link rel="stylesheet" href="/static/main.css">
-    <script>
-        function validateForm() {
-            var x = document.forms["myForm"]["search"].value;
-            var y = x.split(/\s/);
-            if (y.length < 5) {
-                alert("Your post must have at least 5 words!");
-                return false;
-            }
-        }
-    </script>
 </head>
 
 <body>
@@ -32,7 +22,7 @@
             <option value="V3">Version 3</option>
         </select>
     </div>
-    <form onsubmit="validateForm()" class="query-form">
+    <form name="query-form" onsubmit="validateForm()" class="query-form">
         <h1 class="title">
             What would you like to post?
         </h1>
@@ -74,7 +64,6 @@
                         <a href="https://reddit.com/r/{{ d['subreddit'] }}"/>
                         r/{{d['subreddit']}}
                         </a>
-                        <span id="dots">...</span><span id="more"></span>
                         <br>
                         <strong>score:</strong> {{ d['score'] }}
                         <br>
@@ -84,15 +73,14 @@
                         <br>
                         {% if d['suggested_words'] %}
                             <strong>suggested words:</strong> {{ d['suggested_words'] }}
-                            <br>
                         {% endif %}
-                        <span id="{{d['subreddit']}}_dots">...</span><span id="{{d['subreddit']}}_span" style="display:none;">
-                        <strong>description:</strong> {{d['description']}}
+                        <div id="{{d['subreddit']}}_info" style="display:none;">
+                            <strong>description:</strong> {{d['description']}}
+                            <br>
+                            <strong>subscribers:</strong> {{d['subscribers']}}
+                        </div>
                         <br>
-                        <strong>subscribers:</strong> {{d['subscribers']}}
-                        </span>
-                        <br>
-                        <button onclick="myFunction()" id="{{d['subreddit']}}_button">Read more</button>
+                        <button onclick="toggleDetails()" id="{{d['subreddit']}}_button">Read more</button>
                     </div>
                     <hr class="dashed">
                 {% endfor %}
@@ -113,20 +101,25 @@
         relevancyWeight.innerHTML = weightSelector.value + "%";
     }, false);
 
-    function myFunction() {
-        var id = event.target.id.slice(0, -7);
-        console.log(id);
-        var span = document.getElementById(id + "_span");
-        var dots = document.getElementById(id + "_dots");
-        if (dots.style.display == "none") {
-            dots.style.display = "inline";
-            event.target.innerHTML = "Read more";
-            span.style.display = "none";
+    const validateForm = () => {
+        let x = document.forms["query-form"]["search"].value;
+        let y = x.split(/\s/);
+        if (y.length < 5) {
+            alert("Your post must have at least 5 words!");
+            return false;
+        }
+    }
+
+    const toggleDetails = () => {
+        let id = event.target.id.slice(0, -7);
+        let info = document.getElementById(id + "_info");
+        if (info.style.display === "none") {
+            event.target.innerHTML = "Read less";
+            info.style.display = "block";
         }
         else {
-            dots.style.display = "none";
-            event.target.innerHTML = "Read less";
-            span.style.display = "inline";
+            event.target.innerHTML = "Read more";
+            info.style.display = "none";
         }
     }
 </script>
