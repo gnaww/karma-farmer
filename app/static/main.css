@@ -45,16 +45,24 @@ div.sticky {
     font-size: 20px;
   }
 
+#tractor {
+    border-radius: 10px; 
+    padding:5px; 
+    background-color:rgb(255, 86, 0, 1); 
+    color:white;
+}
+
 .logo {
     text-align:left;
     padding-top: 1%;
-    padding-left: 2%;
     position: absolute;
     top:2%;
     font-size: 20px;
-    color: rgb(255, 86, 0, 1);
-    font-family: Verdana;
+    font-weight: bold;
+    color: black;
+    font-family: "Varela Round";
 }
+
 
 .version-select {
     left: 90%;
@@ -69,6 +77,9 @@ div.sticky {
     font-family: 'GlacialIndifferenceRegular';
     background-color: white;
     border-radius: 5px;
+    border-color: 	#C8C8C8;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .title {
@@ -229,6 +240,9 @@ hr.dashed {
     padding:15px;
     background-color:white;
     border-radius: 5px;
+    border-color:	#C8C8C8;
+    border-style: solid;
+    border-width: 1px;
 
 }
 
