@@ -35,7 +35,7 @@
             <h1 for="weight"> What should we weigh more?</h1>
             <div>
                 <span>Potential Karma</span>
-                <span id="karmaWeight">{{ weight }}%</span>
+                <span id="karmaWeight">{{ 100 - weight }}%</span>
                 <input class="slider" id="weight" type="range" name="weight" min="0" max="100" value={{ weight }}>
                 <span>Relevancy of Subreddit</span>
                 <span id="relevancyWeight">{{ weight }}%</span>
