@@ -79,17 +79,12 @@
         {% if query %}
         {% if data|length > 0 %}
         {% for d in data %}
+        <div>
         <p style="font-family: 'GlacialIndifferenceRegular';">
             <strong>subreddit:</strong>
             <a href=https://reddit.com/r/{{d['subreddit']}} />
             r/{{d['subreddit']}}
             </a>
-            <span id="dots">...</span><span id="more"></span>
-            <br>
-            <strong>description:</strong> {{d['description']}}
-            <br>
-            <strong>subscribers:</strong> {{d['subscribers']}}
-            <br>
             <strong>score:</strong> {{d['score']}}
             <br>
             <strong>karma score:</strong> {{d['karmaScore']}}
@@ -100,9 +95,16 @@
             <strong>suggested words:</strong> {{d['suggested_words']}}
             <br>
             {% endif %}
+            <span id="{{d['subreddit']}}_dots">...</span><span id="{{d['subreddit']}}_span" style="display:none;">
+            <strong>description:</strong> {{d['description']}}
+            <br>
+            <strong>subscribers:</strong> {{d['subscribers']}}
+            </span>
+            <br>
         </p>
-        <button onclick="myFunction()" id="myBtn">Read more</button>
+        <button onclick="myFunction()" id="{{d['subreddit']}}_button">Read more</button>
         <hr class="dashed">
+    </div>
         {% endfor %}
         {% else %}
         <p>No relevant results found, please try a more specific query.</p>
@@ -122,18 +124,18 @@
     }, false);
 
     function myFunction() {
-        var dots = document.getElementById("dots");
-        var moreText = document.getElementById("more");
-        var btnText = document.getElementById("myBtn");
-
-        if (dots.style.display === "none") {
+        var id = event.target.id.slice(0, -7);
+        var span = document.getElementById(id + "_span");
+        var dots = document.getElementById(id + "_dots");
+        if (dots.style.display == "none") {
             dots.style.display = "inline";
-            btnText.innerHTML = "Read more";
-            moreText.style.display = "none";
-        } else {
+            event.target.innerHTML = "Read more";
+            span.style.display = "none";
+        }
+        else {
             dots.style.display = "none";
-            btnText.innerHTML = "Read less";
-            moreText.style.display = "inline";
+            event.target.innerHTML = "Read less";
+            span.style.display = "inline";
         }
     }
 </script>
