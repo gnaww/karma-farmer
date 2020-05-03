@@ -10,9 +10,13 @@
         text-align:center;
     }
 
+
     body {
-        padding-top: 15%;
         padding-bottom: 15px;
+    }
+
+    header {
+        background-color: white;
     }
 
     .global-search {
@@ -30,25 +34,52 @@
     }
 }
 
+div.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    box-shadow: 5px 0px 5px #d5dce3;
+    border-width: 5px;
+    padding: 2%;
+    font-size: 20px;
+  }
+
+#tractor {
+    border-radius: 10px; 
+    padding:5px; 
+    background-color:rgb(255, 86, 0, 1); 
+    color:white;
+}
+
 .logo {
     text-align:left;
-    padding-left: 2%;
+    padding-top: 1%;
     position: absolute;
     top:2%;
-    font-size: 25px;
-    color: rgb(255, 86, 0, 1);
-    font-family: Verdana;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    font-family: "Varela Round";
 }
+
 
 .version-select {
     left: 90%;
     position: absolute;
     top: 2%;
+    padding-top: 1%;
+    font-size: medium;
 }
 
 .query-form {
     text-align: center;
     font-family: 'GlacialIndifferenceRegular';
+    background-color: white;
+    border-radius: 5px;
+    border-color: 	#C8C8C8;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .title {
@@ -77,20 +108,55 @@
 }
 
 .btn{
-    background-color: gray;
     border: none;
     background-color: rgb(255, 86, 0, 1);
+    opacity: 90%;
     color: white;
+    font-weight: medium;
+    font-size: large;
+}
+
+.more-btn{
+    border: none;
+    background-color:	rgb(198, 198, 198, 1);
+    opacity: 90%;
+    color: black;
+    font-weight: medium;
+    font-size: medium;
+    border-radius: 5px;
 }
 
 .suggested {
     font-weight: bold;
+    font-size: large;
     color: #383838;
 }
 
 .suggested input {
     display: inline-block;
     width: 40%;
+}
+.slider-labels {
+    font-weight: bold;
+    color: #383838;
+    font-size: medium;
+}
+
+.slider-label-left {
+    font-weight: bold;
+    color: #383838;
+    font-size: medium;
+    display: inline;
+    padding-right: 20%;
+
+}
+
+.slider-label-right {
+    font-weight: bold;
+    color: #383838;
+    font-size: medium;
+    display: inline;
+    padding-left: 10%;
 }
 
 .slider::-webkit-slider-thumb {
@@ -116,9 +182,8 @@
 .slider {
     -webkit-appearance: none;
     height: 25px;
-    background: #d3d3d3;
+    background: 	rgb(198, 198, 198, 1);
     outline: none;
-    opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
     display: inline-block !important;
@@ -150,9 +215,18 @@ hr.dashed {
     width: auto !important;
 }
 
+.percent-weights {
+    font-weight: medium;
+    color: #383838;
+    text-align: center;
+    font-family: 'GlacialIndifferenceRegular';
+}
+
 #bottom {
-    padding-left: 32%;
-    padding-right: 32%;
+    display: block;
+    background-color:#d5dce3;
+    padding-left: 15%;
+    padding-right: 15%;
 }
 
 #bottom h1 {
@@ -163,7 +237,68 @@ hr.dashed {
 
 .result {
     font-family: 'GlacialIndifferenceRegular';
-    padding: 30px;
+    padding:15px;
+    background-color:white;
+    border-radius: 5px;
+    border-color:	#C8C8C8;
+    border-style: solid;
+    border-width: 1px;
+
+}
+
+.result-subreddit {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background-color: rgb(255, 86, 0, 1);
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-categories {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background: #3BCB56;
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-more {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background: #DEBE22;
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-suggest {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: 15px;
+    font-weight: lighter;
+    background: 	#7F4FC4;
+    color:white;
+    padding:3px;
+    border-radius: 15px;
+    line-height: 2;
+
+}
+
+.result-values {
+    font-family: 'GlacialIndifferenceRegular';
+    font-size: medium;
+    font-weight: lighter;
+
 }
 
 footer {
