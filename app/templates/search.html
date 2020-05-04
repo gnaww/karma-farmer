@@ -10,65 +10,56 @@
 </head>
 
 <body>
-    <div class="sticky">
-        <a href="/">
-            <p class="logo"> <i id="tractor" class="fas fa-tractor"></i>
-                Karma-Farmer
-            </p>
-        </a>
-        <div class="version-select">
-            <select id="cars" onchange="location = this.value;">
-                <option value="https://karmafarmer.herokuapp.com/">Version 1</option>
-                <option value="https://karmafarmer-v2.herokuapp.com/">Version 2</option>
-                <option selected="selected" value="http://karmafarmer-v3.herokuapp.com/">Version 3</option>
-            </select>
-        </div>
-    </div>
-    <div style="background-color:#545452">
-
-        <div style=" padding-left: 5%; padding-right: 5%;">
-            <div style="background-color: 	#d5dce3">
-                <br><br>
-                <div style="padding-left: 3%; padding-right: 3%;">
-                    <form name="query-form" onsubmit="validateForm()" class="query-form">
-                        <br>
-                        <h1 class="title">
-                            What would you like to post?
-                        </h1>
-                        <div class="query-input">
-                            <textarea rows="10" cols="10" id="input" type="text" name="search" class="form-control"
-                                placeholder="My Post">{{ query }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <h1 for="weight"> What should we weigh more?</h1>
-                            <br>
-                            <p class="slider-label-left">Potential Karma</p>
-                            <p class="slider-label-right">Relevancy of Subreddit</p>
-                            <br>
-                            <div>
-                                <div>
-                                    <span class="slider-labels" id="karmaWeight">{{ weight }}%</span> &nbsp;
-                                    <input class="slider" id="weight" type="range" name="weight" min="0" max="100"
-                                        value={{ weight }}>
-                                    &nbsp;
-                                    <span class="slider-labels" id="relevancyWeight">{{ weight }}%</span>
-                                </div>
-                                <br>
-                            </div>
-                        </div>
-                        <button onclick="location.href='#bottom'" type="submit" class="btn">
-                            Show Me Subreddits!
-                        </button>
-                        <br> <br>
-                    </form>
-                    <br>
-                </div>
+    <div class="wrapper">
+        <div class="sticky">
+            <a href="/">
+                <p class="logo"> <i id="tractor" class="fas fa-tractor"></i>
+                    Karma-Farmer
+                </p>
+            </a>
+            <div class="version-select">
+                <select id="cars" onchange="location = this.value;">
+                    <option value="https://karmafarmer.herokuapp.com/">Version 1</option>
+                    <option value="https://karmafarmer-v2.herokuapp.com/">Version 2</option>
+                    <option selected="selected" value="http://karmafarmer-v3.herokuapp.com/">Version 3</option>
+                </select>
             </div>
         </div>
-    </div>
-
-    <div style="background-color:#545452">
-        <div style="padding-left: 5%; padding-right: 5%;">
+        <div class="content">
+            <div class="search-box">
+                <form name="query-form" onsubmit="validateForm()" class="query-form">
+                    <br>
+                    <h1 class="title">
+                        What would you like to post?
+                    </h1>
+                    <div class="query-input">
+                        <textarea rows="10" cols="10" id="input" type="text" name="search" class="form-control"
+                            placeholder="My Post">{{ query }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <h1 for="weight"> What should we weigh more?</h1>
+                        <br>
+                        <p class="slider-label-left">Potential Karma</p>
+                        <p class="slider-label-right">Relevancy of Subreddit</p>
+                        <br>
+                        <div>
+                            <div>
+                                <span class="slider-labels" id="karmaWeight">{{ weight }}%</span> &nbsp;
+                                <input class="slider" id="weight" type="range" name="weight" min="0" max="100"
+                                    value={{ weight }}>
+                                &nbsp;
+                                <span class="slider-labels" id="relevancyWeight">{{ weight }}%</span>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <button onclick="location.href='#bottom'" type="submit" class="btn">
+                        Show Me Subreddits!
+                    </button>
+                    <br> <br>
+                </form>
+                <br>
+            </div>
             <div class="form-group" id="bottom">
                 <br>
                 <h1>{{ output_message }}</h1>
