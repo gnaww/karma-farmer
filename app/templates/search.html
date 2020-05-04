@@ -39,14 +39,6 @@
                             <textarea rows="10" cols="10" id="input" type="text" name="search" class="form-control"
                                 placeholder="My Post">{{ query }}</textarea>
                         </div>
-
-                        <div>
-                            <h5 for="suggested" class="suggested"> <input id="suggested" type="checkbox"
-                                    name="suggested" {{ suggested }}> I Want Suggested Words
-                            </h5>
-                        </div>
-                        <br>
-
                         <div class="form-group">
                             <h1 for="weight"> What should we weigh more?</h1>
                             <br>
@@ -64,8 +56,6 @@
                                 <br>
                             </div>
                         </div>
-
-
                         <button onclick="location.href='#bottom'" type="submit" class="btn">
                             Show Me Subreddits!
                         </button>
@@ -86,7 +76,7 @@
                 {% if data|length > 0 %}
                 {% for d in data %}
                 <div class="result">
-                    <strong class="result-subreddit">&nbsp;&nbsp;subreddit&nbsp;&nbsp;</strong>
+                    <strong class="result-subreddit">&nbsp;&nbsp;subreddit&nbsp;&nbsp;</strong>&nbsp;&nbsp;
                     <a class="result-values" href="https://reddit.com/r/{{ d['subreddit'] }}" />
                     r/{{d['subreddit']}}
                     </a>
@@ -100,11 +90,8 @@
                     <strong class="result-categories">&nbsp;&nbsp;relevancy score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
                         class="result-values">{{ d['relevancyScore'] }}</span>
                     <br>
-                    {% if d['suggested_words'] %}
-                    <strong class="result-suggest">&nbsp;&nbsp;suggested words&nbsp;&nbsp; </strong>
-                    &nbsp;&nbsp;<span class="result-values">{{ d['suggested_words'] }}</span>
-                    <br>
-                    {% endif %}
+                    <strong style="display: none" class="result-suggest" id="{{d['subreddit']}}_words_label">&nbsp;&nbsp;suggested words&nbsp;&nbsp;</strong>
+                    <span style="display: none" class="result-values" id="{{d['subreddit']}}_words"></span>
                     <div id="{{d['subreddit']}}_info" style="display:none;">
                         <strong class="result-more">&nbsp;&nbsp;description&nbsp;&nbsp;</strong>
                         &nbsp;&nbsp;<span class="result-values"> {{d['description']}}</span>
@@ -114,6 +101,7 @@
                     </div>
                     <br>
                     <button class="more-btn" onclick="toggleDetails()" id="{{d['subreddit']}}_button">More</button>
+                    <button class="more-btn" onclick="fetchSuggestedWords()" id="{{d['subreddit']}}_fetch_words">Get Suggested Words</button>
                 </div>
                 <br>
                 {% endfor %}
@@ -128,17 +116,18 @@
 </body>
 <footer>Student Name: ({{ netid }})</footer>
 <script>
-    let weightSelector = document.getElementById("weight");
-    let karmaWeight = document.getElementById("karmaWeight");
-    let relevancyWeight = document.getElementById("relevancyWeight");
+    const weightSelector = document.getElementById("weight");
+    const karmaWeight = document.getElementById("karmaWeight");
+    const relevancyWeight = document.getElementById("relevancyWeight");
+
     weightSelector.addEventListener('input', () => {
         karmaWeight.innerHTML = 100 - weightSelector.value + "%";
         relevancyWeight.innerHTML = weightSelector.value + "%";
     }, false);
 
     const validateForm = () => {
-        let x = document.forms["query-form"]["search"].value;
-        let y = x.split(/\s/);
+        const x = document.forms["query-form"]["search"].value;
+        const y = x.split(/\s/);
         if (y.length < 5) {
             alert("Your post must have at least 5 words!");
             return false;
@@ -146,8 +135,8 @@
     }
 
     const toggleDetails = () => {
-        let id = event.target.id.slice(0, -7);
-        let info = document.getElementById(id + "_info");
+        const id = event.target.id.slice(0, -7);
+        const info = document.getElementById(id + "_info");
         if (info.style.display === "none") {
             event.target.innerHTML = "Less";
             info.style.display = "block";
@@ -157,6 +146,29 @@
             info.style.display = "none";
         }
     }
-</script>
 
+    const fetchSuggestedWords = async () => {
+        const query = document.getElementById("input").value;
+        const subreddit = event.target.id.slice(0, -12);
+        const suggestedWordsDisplay = document.getElementById(`${subreddit}_words`);
+        const suggestedWordsDisplayLabel = document.getElementById(`${subreddit}_words_label`);
+        const fetchButton = event.target;
+        fetchButton.style.display = "none";
+        suggestedWordsDisplay.innerHTML = "&nbsp;&nbsp;Loading...<br>";
+        suggestedWordsDisplay.style.display = "inline";
+        suggestedWordsDisplayLabel.style.display = "inline";
+
+        const response =
+            await fetch(`/suggested_words?search=${query}&subreddit=${subreddit}`)
+                .then(res => res.json())
+                .then(data => suggestedWordsDisplay.innerHTML = `&nbsp;&nbsp;${data.suggested_words}<br>`)
+                .catch(err => {
+                    console.log(err);
+                    alert("Error occurred while fetching suggested words.")
+                    fetchButton.style.display = "inline";
+                    suggestedWordsDisplay.style.display = "none";
+                    suggestedWordsDisplayLabel.style.display = "none";
+                });
+    }
+</script>
 </html>

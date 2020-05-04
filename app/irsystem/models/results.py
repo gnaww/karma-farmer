@@ -33,7 +33,15 @@ def build_cooccurrence_mat(posts, good_types, good_types_lookup, idf):
 
     return cooccurrence_mat
 
-def get_suggested_words(posts, query, idf):
+def get_suggested_words(query, subreddit):
+    data = [data.serialize() for data in Data.query.all()]
+    n_subreddits = len(data)
+    inv_idx, id_to_subreddit = build_inverted_index(data)
+    idf, idf_score = compute_idf(inv_idx, n_subreddits)
+
+    metadata = Metadata.query.filter_by(subreddit=subreddit).first().serialize()
+    posts = metadata["posts"]
+
     query_idf = []
     for term in query:
         if term in idf:
@@ -66,7 +74,7 @@ def get_suggested_words(posts, query, idf):
         if word not in query:
             suggested_words.append(word)
         i += 1
-    return suggested_words
+    return ", ".join(suggested_words)
 
 def build_inverted_index(data):
     id_to_subreddit = {}
@@ -141,8 +149,7 @@ def index_search(
     tokenizer,
     id_to_subreddit,
     search_weight,
-    score_weight,
-    get_suggested
+    score_weight
 ):
     results = []
     results_mat = np.zeros(len(doc_norms_freq))
@@ -196,19 +203,13 @@ def index_search(
     results = results[:5]
     for ind, result in enumerate(results):
         metadata = Metadata.query.filter_by(subreddit=result["subreddit"]).first().serialize()
-        description = metadata["description"]
-        subscribers = metadata["subscribers"]
-        posts = metadata["posts"]
-        suggested_words = get_suggested_words(posts,
-                                              set(query),
-                                              idf) if get_suggested and ind==0 else None
-        result["description"] = description
-        result["subscribers"] = "{:,}".format(subscribers)
-        result["suggested_words"] = ", ".join(suggested_words) if suggested_words else None
+
+        result["description"] = metadata["description"]
+        result["subscribers"] = "{:,}".format(metadata["subscribers"])
     return results
 
 
-def get_results(query, weight, get_suggested):
+def get_results(query, weight):
     data = [data.serialize() for data in Data.query.all()]
     n_subreddits = len(data)
     inv_idx, id_to_subreddit = build_inverted_index(data)
@@ -227,6 +228,5 @@ def get_results(query, weight, get_suggested):
         id_to_subreddit,
         search_weight,
         score_weight,
-        get_suggested
     )
     return search
