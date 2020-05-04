@@ -66,9 +66,9 @@ div.sticky {
 }
 
 #tractor {
-    border-radius: 10px; 
-    padding:5px; 
-    background-color:rgb(255, 86, 0, 1); 
+    border-radius: 10px;
+    padding:5px;
+    background-color:rgb(255, 86, 0, 1);
     color:white;
 }
 
@@ -332,4 +332,7 @@ footer {
     font-family: 'GlacialIndifferenceRegular';
     text-align: center;
     flex-shrink: 0;
+}
+.checked {
+    color: orange;
 }

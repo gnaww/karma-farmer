@@ -7,6 +7,7 @@
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Varela+Round" />
     <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -71,15 +72,14 @@
                     <a class="result-values" href="https://reddit.com/r/{{ d['subreddit'] }}" />
                     r/{{d['subreddit']}}
                     </a>
-                    <br>
                     <strong class="result-categories">&nbsp;&nbsp;score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
-                        class="result-values">{{ d['score'] }}</span>
+                        class="result-values total_stars">{{ d['score'] }}</span>
                     <br>
                     <strong class="result-categories">&nbsp;&nbsp;karma score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
-                        class="result-values">{{ d['karmaScore'] }}</span>
+                        class="result-values karma_stars">{{ d['karmaScore'] }}</span>
                     <br>
                     <strong class="result-categories">&nbsp;&nbsp;relevancy score&nbsp;&nbsp;</strong>&nbsp;&nbsp;<span
-                        class="result-values">{{ d['relevancyScore'] }}</span>
+                        class="result-values relevancy_stars">{{ d['relevancyScore'] }}</span>
                     <br>
                     <strong style="display: none" class="result-suggest" id="{{d['subreddit']}}_words_label">&nbsp;&nbsp;suggested words&nbsp;&nbsp;</strong>
                     <span style="display: none" class="result-values" id="{{d['subreddit']}}_words"></span>
@@ -161,5 +161,85 @@
                     suggestedWordsDisplayLabel.style.display = "none";
                 });
     }
+    var total_star_elements = document.getElementsByClassName("total_stars");
+    var total_score = total_star_elements[0].innerHTML;
+    // reduce_star = false;
+    // if (total_score < 0.1) {
+    //     reduce_star = true;
+    // }
+    var karma_star_elements = document.getElementsByClassName("karma_stars");
+    var karma_score = karma_star_elements[0].innerHTML;
+    var relevancy_star_elements = document.getElementsByClassName("relevancy_stars");
+    var relevancy_score = relevancy_star_elements[0].innerHTML;
+    var better_score = Math.max(relevancy_score, karma_score)
+    Array.prototype.forEach.call(total_star_elements, function(d, i){
+        ratio = total_star_elements[i].innerHTML / total_score;
+        ratio *= 5;
+        num_stars = Math.round(ratio);
+        d.innerHTML = "";
+        // if (reduce_star){
+        //     num_stars -= 1;
+        // }
+        for (i = 0; i < num_stars; i++) {
+            node = document.createElement("SPAN");
+            node.classList.add("fa");
+            node.classList.add("fa-star");
+            node.classList.add("checked");
+            d.appendChild(node);
+        }
+        for (i = num_stars; i < 5; i++) {
+            node = document.createElement("SPAN");
+            node.classList.add("fa");
+            node.classList.add("fa-star");
+            d.appendChild(node);
+        }
+    });
+    Array.prototype.forEach.call(karma_star_elements, function(d, i){
+        ratio = karma_star_elements[i].innerHTML / better_score;
+        ratio *= 5;
+        num_stars = Math.round(ratio);
+        d.innerHTML = "";
+        // if (reduce_star){
+        //     num_stars -= 1;
+        // }
+        for (i = 0; i < num_stars; i++) {
+            node = document.createElement("SPAN");
+            node.classList.add("fa");
+            node.classList.add("fa-star");
+            node.classList.add("checked");
+            d.appendChild(node);
+        }
+        for (i = num_stars; i < 5; i++) {
+            node = document.createElement("SPAN");
+            node.classList.add("fa");
+            node.classList.add("fa-star");
+            d.appendChild(node);
+        }
+    });
+    Array.prototype.forEach.call(relevancy_star_elements, function(d, i){
+        ratio = relevancy_star_elements[i].innerHTML / better_score;
+        ratio *= 5;
+        num_stars = Math.round(ratio);
+        d.innerHTML = "";
+        // if (reduce_star){
+        //     num_stars -= 1;
+        // }
+        for (i = 0; i < num_stars; i++) {
+            node = document.createElement("SPAN");
+            node.classList.add("fa");
+            node.classList.add("fa-star");
+            node.classList.add("checked");
+            d.appendChild(node);
+        }
+        for (i = num_stars; i < 5; i++) {
+            node = document.createElement("SPAN");
+            node.classList.add("fa");
+            node.classList.add("fa-star");
+            d.appendChild(node);
+        }
+    });
+    console.log(document.getElementsByClassName("total_stars"));
+    console.log(document.getElementsByClassName("karma_stars"));
+    console.log(document.getElementsByClassName("relevancy_stars"));
 </script>
 </html>
