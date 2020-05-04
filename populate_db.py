@@ -74,9 +74,9 @@ def fetch_data(subreddit):
                 )
                 valid_posts_counter += 1
 
-                # If reached 200 text-based posts OR no more results to fetch, return list.
+                # If reached 100 text-based posts OR no more results to fetch, return list.
                 # If not, do another iteration of while loop to get next batch of results to process
-                if valid_posts_counter == 200:
+                if valid_posts_counter == 100:
                     print("[DONE] Valid posts :", valid_posts_counter)
                     # Return value example : [{"score": 123, "selftext": "Body text", "title": "Title text"}]
                     return valid_posts
