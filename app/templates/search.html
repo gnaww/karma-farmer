@@ -180,6 +180,12 @@
         // if (reduce_star){
         //     num_stars -= 1;
         // }
+        if (num_stars > 5) {
+            num_stars = 5;
+        }
+        if (num_stars < 0) {
+            num_stars = 0;
+        }
         for (i = 0; i < num_stars; i++) {
             node = document.createElement("SPAN");
             node.classList.add("fa");
@@ -202,6 +208,12 @@
         // if (reduce_star){
         //     num_stars -= 1;
         // }
+        if (num_stars > 5) {
+            num_stars = 5;
+        }
+        if (num_stars < 0) {
+            num_stars = 0;
+        }
         for (i = 0; i < num_stars; i++) {
             node = document.createElement("SPAN");
             node.classList.add("fa");
@@ -221,6 +233,12 @@
         ratio *= 5;
         num_stars = Math.round(ratio);
         d.innerHTML = "";
+        if (num_stars > 5) {
+            num_stars = 5;
+        }
+        if (num_stars < 0) {
+            num_stars = 0;
+        }
         // if (reduce_star){
         //     num_stars -= 1;
         // }
